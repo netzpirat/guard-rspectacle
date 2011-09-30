@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-# Specify your gem's dependencies in guard-rspec_rails.gemspec
+# Specify your gem's dependencies in guard-rspectacle.gemspec
 gemspec
 
 gem 'rake'

@@ -3,11 +3,11 @@
 require 'rspec/core/runner'
 
 module Guard
-  class RSpecRails
+  class RSpectacle
 
-    autoload :Formatter, 'guard/rspec_rails/formatter'
+    autoload :Formatter, 'guard/rspectacle/formatter'
 
-    # The RSpectacular runner handles the execution of the rspec test.
+    # The RSpectacle runner handles the execution of the rspec test.
     #
     module Runner
       class << self

@@ -1,5 +1,5 @@
 require 'rspec'
-require 'guard/rspec_rails'
+require 'guard/rspectacle'
 
 RSpec.configure do |config|
 

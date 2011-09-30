@@ -7,11 +7,11 @@ module Guard
   # The RSpecRails guard that gets notifications about the following
   # Guard events: `start`, `stop`, `reload`, `run_all` and `run_on_change`.
   #
-  class RSpecRails < Guard
+  class RSpectacle < Guard
 
-    autoload :Formatter, 'guard/rspec_rails/formatter'
-    autoload :Inspector, 'guard/rspec_rails/inspector'
-    autoload :Runner, 'guard/rspec_rails/runner'
+    autoload :Formatter, 'guard/rspectacle/formatter'
+    autoload :Inspector, 'guard/rspectacle/inspector'
+    autoload :Runner, 'guard/rspectacle/runner'
 
     DEFAULT_OPTIONS = {
         :cli => ''
@@ -45,7 +45,7 @@ module Guard
       Formatter.info 'Load RSpec...'
       require 'spec/spec_helper'
 
-      Formatter.info 'RSpectacular ready!'
+      Formatter.info 'RSpectacle is ready!'
       true
     end
 

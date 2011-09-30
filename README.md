@@ -1,6 +1,6 @@
-# Guard::RSpecRails [![Build Status](https://secure.travis-ci.org/netzpirat/guard-rspec-rails.png)](http://travis-ci.org/netzpirat/guard-rspec-rails)
+# Guard::RSpectacle [![Build Status](https://secure.travis-ci.org/netzpirat/guard-rspectacle.png)](http://travis-ci.org/netzpirat/guard-rspectacle)
 
-Guard::RSpecRails automatically tests your Rails application when files are modified.
+Guard::RSpectacle automatically tests your application when files are modified.
 
 Tested on MRI Ruby 1.8.7, 1.9.2, REE and the latest versions of JRuby & Rubinius.
 
@@ -9,21 +9,21 @@ If you have any questions please join us on our [Google group](http://groups.goo
 
 ## Install
 
-### Guard and Guard::RSpecRails
+### Guard and Guard::RSpectacle
 
 Please be sure to have [Guard][] installed.
 
 Install the gem:
 
-    $ gem install guard-rspec-rails
+    $ gem install guard-rspectacle
 
 Add it to your `Gemfile`, preferably inside the development group:
 
-    gem 'guard-rspec-rails'
+    gem 'guard-rspectacle'
 
 Add guard definition to your `Guardfile` by running this command:
 
-    $ guard init rspec-rails
+    $ guard init rspectacle
 
 ## Usage
 

@@ -1,7 +1,7 @@
 module Guard
-  class RSpecRails
+  class RSpectacle
 
-    # The Guard::RSpectacular formatter collects console and
+    # The Guard::RSpectacle formatter collects console and
     # system notification methods and enhances them with
     # some color information.
     #
