@@ -1,5 +1,5 @@
 module Guard
-  class RSpectacular
+  class RSpecRails
 
     # The inspector verifies if the changed paths are valid
     # for Guard::RSpectacular.

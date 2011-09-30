@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Guard::RSpectacular::Formatter do
+describe Guard::RSpecRails::Formatter do
 
-  let(:formatter) { Guard::RSpectacular::Formatter }
+  let(:formatter) { Guard::RSpecRails::Formatter }
   let(:ui) { Guard::UI }
   let(:notifier) { Guard::Notifier }
 

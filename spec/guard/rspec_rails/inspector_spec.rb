@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Guard::RSpectacular::Inspector do
+describe Guard::RSpecRails::Inspector do
   before do
     Dir.stub(:glob).and_return ['spec/models/model_spec.rb', 'spec/constrollers/test_controller_spec.rb']
   end
 
-  subject { Guard::RSpectacular::Inspector }
+  subject { Guard::RSpecRails::Inspector }
 
   describe 'clean' do
     it 'allows the RSpec spec dir' do

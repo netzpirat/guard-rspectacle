@@ -1,5 +1,5 @@
 module Guard
-  class RSpectacular
+  class RSpecRails
 
     # The Guard::RSpectacular formatter collects console and
     # system notification methods and enhances them with
