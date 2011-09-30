@@ -32,7 +32,7 @@ module Guard
 
     # Gets called once when Guard starts.
     #
-    # @return [Boolean] when the start was successful
+    # @raise [:task_has_failed] when run_on_change has failed
     #
     def start
       ENV['RAILS_ENV'] = 'test'
@@ -46,22 +46,19 @@ module Guard
       require 'spec/spec_helper'
 
       Formatter.info 'RSpectacle is ready!'
-      true
     end
 
     # Gets called when the Guard should reload itself.
     #
-    # @return [Boolean] when the reload was successful
+    # @raise [:task_has_failed] when run_on_change has failed
     #
     def reload
       Dir.glob('**/*').each { |file| reload_file(file) }
-
-      true
     end
 
     # Gets called when all specs should be run.
     #
-    # @return [Boolean] when running all specs was successful
+    # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_all
       Runner.run(['spec'], options)
@@ -70,7 +67,7 @@ module Guard
     # Gets called when watched paths and files have changes.
     #
     # @param [Array<String>] paths the changed paths and files
-    # @return [Boolean] when running the changed specs was successful
+    # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_on_change(paths)
       paths.each { |path| reload_file(path) }
@@ -82,6 +79,7 @@ module Guard
     # Reloads the given file.
     #
     # @param [String] file the changed file
+    # @raise [:task_has_failed] when run_on_change has failed
     #
     def reload_file(file)
       return unless file =~ /\.rb$/
@@ -91,6 +89,8 @@ module Guard
 
     rescue Exception => e
       Formatter.error "Error reloading file #{ file }: #{ e.message }"
+
+      throw :task_has_failed
     end
 
   end
