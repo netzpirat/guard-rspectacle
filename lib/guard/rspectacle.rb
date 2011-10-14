@@ -35,14 +35,9 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def start
-      ENV['RAILS_ENV'] = 'test'
+      ENV['RAILS_ENV'] ||= 'test'
+      Formatter.info "Starting RSpectacle #{ ENV['RAILS_ENV'] } environment"
 
-      if File.exists?('config/application.rb')
-        Formatter.info 'Load Rails...'
-        require 'config/application'
-      end
-
-      Formatter.info 'Load RSpec...'
       require 'spec/spec_helper'
 
       Formatter.info 'RSpectacle is ready!'
