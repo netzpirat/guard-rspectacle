@@ -1,11 +1,17 @@
 # coding: utf-8
 
+require 'guard/rspectacle/notifier'
+
 require 'rspec/core/runner'
+require 'rspec/core/command_line'
+require 'rspec/core/world'
+require 'rspec/core/configuration'
+require 'rspec/core/configuration_options'
+
+require 'stringio'
 
 module Guard
   class RSpectacle
-
-    autoload :Formatter, 'guard/rspectacle/formatter'
 
     # The RSpectacle runner handles the execution of the rspec test.
     #
@@ -22,7 +28,18 @@ module Guard
 
           Formatter.info "Run #{ paths.join('') }"
 
-          RSpec::Core::Runner.run(paths)
+          # RSpec hardcore reset
+          world = RSpec::Core::World.new
+          configuration = RSpec::Core::Configuration.new
+
+          RSpec.instance_variable_set :@world, world
+          RSpec.instance_variable_set :@configuration, configuration
+
+          #TODO: Add Formatter: configuration.add_formatter ::Guard::RSpectacle::Notifier
+
+          RSpec::Core::CommandLine.new(RSpec::Core::ConfigurationOptions.new(paths), configuration, world).run($stderr, $stdout)
+
+          #TODO: Get failed examples
 
         rescue Exception => e
           Formatter.error "Error while spec run: #{ e.message }"
