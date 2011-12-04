@@ -38,7 +38,7 @@ module Guard
       ENV['RAILS_ENV'] ||= 'test'
       Formatter.info "Starting RSpectacle #{ ENV['RAILS_ENV'] } environment"
 
-      require 'spec/spec_helper'
+      require './spec/spec_helper'
 
       Formatter.info 'RSpectacle is ready!'
     end
