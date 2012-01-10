@@ -7,6 +7,12 @@ Tested on MRI Ruby 1.8.7, 1.9.2, REE and the latest versions of JRuby & Rubinius
 If you have any questions please join us on our [Google group](http://groups.google.com/group/guard-dev) or on `#guard`
 (irc.freenode.net).
 
+## Prove of concept
+
+This is an early stage prove of concept. The idea is that Guard starts the Rails environment, reloads changed Ruby files and starts the RSpec runner embeddedin the current process.
+
+Issues are disable for now, but I can give you commit access if you like to help.
+
 ## Install
 
 ### Guard and Guard::RSpectacle
