@@ -66,8 +66,9 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_on_change(paths)
+      clean_paths = Inspector.clean(paths)
       paths.each { |path| reload_file(path) }
-      Runner.run(Inspector.clean(paths), cli)
+      Runner.run(clean_paths, cli) if clean_paths.any? # TODO: Maybe bug in guard: watches files not actualy matching, like stuff in db/
     end
 
     private
