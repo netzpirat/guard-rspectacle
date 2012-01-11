@@ -57,7 +57,12 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_all
-      Runner.run(['spec'], cli)
+      passed = Runner.run(['spec'], cli)
+      if passed
+        Formatter.notify "How cool, all works!", :image => :success
+      else
+        Formatter.notify "Failing... not there yet.", :image => :failed
+      end
     end
 
     # Gets called when watched paths and files have changes.
@@ -68,7 +73,13 @@ module Guard
     def run_on_change(paths)
       clean_paths = Inspector.clean(paths)
       paths.each { |path| reload_file(path) }
-      Runner.run(clean_paths, cli) if clean_paths.any? # TODO: Maybe bug in guard: watches files not actualy matching, like stuff in db/
+      return unless clean_paths.any?# TODO: Maybe bug in guard: watches files not actualy matching, like stuff in db/
+      passed = Runner.run(clean_paths, cli)
+      if passed
+        Formatter.notify "Well done! Specs passed!", :image => :success
+      else
+        Formatter.notify "Try harder, still failing.", :image => :failed
+      end
     end
 
     private
