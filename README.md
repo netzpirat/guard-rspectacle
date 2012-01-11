@@ -15,7 +15,7 @@ If you have any questions please join us on our [Google group](http://groups.goo
 
 ### Guard and Guard::RSpectacle
 
-Please be sure to have [Guard][https://github.com/guard/guard] installed.
+Please be sure to have [Guard](https://github.com/guard/guard) installed.
 
 Add it to your `Gemfile`, preferably inside the development group:
 
