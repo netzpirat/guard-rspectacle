@@ -76,9 +76,10 @@ module Guard
       return unless clean_paths.any?# TODO: Maybe bug in guard: watches files not actualy matching, like stuff in db/
       passed = Runner.run(clean_paths, cli)
       if passed
-        Formatter.notify "Well done! Specs passed!", :image => :success
+        Formatter.notify "Awesome, passing! Will check other specs too.", :image => :success
+        run_all
       else
-        Formatter.notify "Try harder, still failing.", :image => :failed
+        Formatter.notify "Try harder, failing.", :image => :failed
       end
     end
 
