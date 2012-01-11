@@ -16,36 +16,28 @@ module Guard
     # The RSpectacle runner handles the execution of the rspec test.
     #
     module Runner
+
       class << self
-
-        # Run the supplied specs.
+        # Run a suite of RSpec examples.
         #
-        # @param [Array<String>] paths the spec files or directories
-        # @param [Hash] options the options for the Guard
+        # #### Parameters
+        # * +files+ - an array of files to run specs on
+        # * +cli+ - an array of RSpec command-line-supported arguments
+        # * +err+ - error stream (Default: $stderr)
+        # * +out+ - output stream (Default: $stdout)
         #
-        def run(paths, options = {})
-          return false if paths.empty?
-
-          Formatter.info "Run #{ paths.join('') }"
-
-          # RSpec hardcore reset
-          world = RSpec::Core::World.new
-          configuration = RSpec::Core::Configuration.new
-
-          RSpec.instance_variable_set :@world, world
-          RSpec.instance_variable_set :@configuration, configuration
-
-          #TODO: Add Formatter: configuration.add_formatter ::Guard::RSpectacle::Notifier
-
-          RSpec::Core::CommandLine.new(RSpec::Core::ConfigurationOptions.new(paths), configuration, world).run($stderr, $stdout)
-
-          #TODO: Get failed examples
-
-        rescue Exception => e
-          Formatter.error "Error while spec run: #{ e.message }\n#{e.backtrace.join("\n")}"
+        # #### Returns
+        # * +Boolean+ - true if specs passed, false if failed
+        def run(files, cli, err=$stderr, out=$stdout)
+          # For reference, see:
+          # - https://github.com/rspec/rspec-core/blob/master/lib/rspec/core/runner.rb
+          # - https://github.com/rspec/rspec-core/blob/master/spec/rspec/core/configuration_options_spec.rb
+          rspec_options = files | cli.to_s.split() # merge files and the passed in options for RSpec
+          code = ::RSpec::Core::Runner.run(rspec_options, err, out)
+          code == 0
         end
-
       end
+
     end
   end
 end

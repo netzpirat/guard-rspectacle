@@ -57,7 +57,7 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_all
-      Runner.run(['spec'], options)
+      Runner.run(['spec'], cli)
     end
 
     # Gets called when watched paths and files have changes.
@@ -67,7 +67,7 @@ module Guard
     #
     def run_on_change(paths)
       paths.each { |path| reload_file(path) }
-      Runner.run(Inspector.clean(paths), options)
+      Runner.run(Inspector.clean(paths), cli)
     end
 
     private
@@ -87,6 +87,10 @@ module Guard
       Formatter.error "Error reloading file #{ file }: #{ e.message }"
 
       throw :task_has_failed
+    end
+
+    def cli
+      options[:cli] || ''
     end
 
   end
