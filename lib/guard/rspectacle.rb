@@ -41,6 +41,7 @@ module Guard
       require './spec/spec_helper'
 
       Formatter.info 'RSpectacle is ready!'
+      run_all
     end
 
     # Gets called when the Guard should reload itself.

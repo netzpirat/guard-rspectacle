@@ -1,6 +1,8 @@
 pkg/*
+bin/
 *.gem
 *.rbc
+*.swp
 .bundle
 .yardoc
 doc

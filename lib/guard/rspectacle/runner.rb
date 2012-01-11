@@ -42,7 +42,7 @@ module Guard
           #TODO: Get failed examples
 
         rescue Exception => e
-          Formatter.error "Error while spec run: #{ e.message }"
+          Formatter.error "Error while spec run: #{ e.message }\n#{e.backtrace.join("\n")}"
         end
 
       end
