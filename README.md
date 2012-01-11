@@ -11,21 +11,15 @@ If you have any questions please join us on our [Google group](http://groups.goo
 
 **This is an early stage prove of concept. The idea is that Guard starts the Rails environment, reloads changed Ruby files and starts the RSpec runner embedded in the current process.**
 
-Issues are disable for now, but I can give you commit access if you like to help.
-
 ## Install
 
 ### Guard and Guard::RSpectacle
 
-Please be sure to have [Guard][] installed.
-
-Install the gem:
-
-    $ gem install guard-rspectacle
+Please be sure to have [Guard][https://github.com/guard/guard] installed.
 
 Add it to your `Gemfile`, preferably inside the development group:
 
-    gem 'guard-rspectacle'
+    gem 'guard-rspectacle', :git => 'git://github.com/netzpirat/guard-rspectacle.git'
 
 Add guard definition to your `Guardfile` by running this command:
 
