@@ -16,7 +16,7 @@ module Guard
     autoload :Reloader, 'guard/rspectacle/reloader'
     autoload :Notifier, 'guard/rspectacle/notifier'
 
-    attr_accessor :last_run_failed, :last_failed_paths
+    attr_accessor :last_run_passed, :rerun_examples
 
     DEFAULT_OPTIONS = {
         :cli => '',
@@ -24,6 +24,7 @@ module Guard
         :hide_success   => false,
         :all_on_start   => true,
         :keep_failed    => true,
+        :keep_pending   => true,
         :all_after_pass => true,
     }
 
@@ -35,16 +36,17 @@ module Guard
     # @option options [Boolean] :notification show notifications
     # @option options [Boolean] :hide_success hide success message notification
     # @option options [Boolean] :all_on_start Run all specs on start
-    # @option options [Boolean] :keep_failed keep failed suites and add them to the next run again
-    # @option options [Boolean] :all_after_pass run all suites after a suite has passed again after failing
+    # @option options [Boolean] :keep_failed keep failed examples and add them to the next run again
+    # @option options [Boolean] :keep_pending keep pending examples and add them to the next run again
+    # @option options [Boolean] :all_after_pass run all specs after all examples have passed again after failing
     #
     def initialize(watchers = [], options = {})
       options = DEFAULT_OPTIONS.merge(options)
 
       super(watchers, options)
 
-      self.last_run_failed = false
-      self.last_failed_paths = []
+      self.last_run_passed = true
+      self.rerun_examples = []
     end
 
     # Gets called once when Guard starts.
@@ -66,8 +68,8 @@ module Guard
     def reload
       Dir.glob('**/*.rb').each { |file| Reloader.reload_file(file) }
 
-      self.last_run_failed = false
-      self.last_failed_paths = []
+      self.last_run_passed = true
+      self.rerun_examples = []
     end
 
     # Gets called when all specs should be run.
@@ -75,10 +77,15 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_all
-      passed, failed_specs = Runner.run(['spec'], options)
+      passed, failed_examples, passed_examples, pending_examples = Runner.run(['spec'], options)
 
-      self.last_failed_paths = failed_specs
-      self.last_run_failed = !passed
+      if options[:keep_pending]
+        self.rerun_examples = failed_examples + pending_examples
+      else
+        self.rerun_examples = failed_examples
+      end
+
+      self.last_run_passed = passed
 
       throw :task_has_failed unless passed
     end
@@ -92,21 +99,23 @@ module Guard
       specs = Inspector.clean(paths)
       return false if specs.empty?
 
-      specs += self.last_failed_paths if options[:keep_failed]
+      specs += self.rerun_examples if options[:keep_failed]
 
       # RSpec reloads the files, so reload only non spec files
       (paths - specs).each { |path| Reloader.reload_file(path) }
 
-      passed, failed_specs = Runner.run(specs, options)
+      passed, failed_examples, passed_examples, pending_examples = Runner.run(specs, options)
 
-      if passed
-        self.last_failed_paths = self.last_failed_paths - paths
-        run_all if self.last_run_failed && options[:all_after_pass]
+      if options[:keep_pending]
+        self.rerun_examples += failed_examples + pending_examples
       else
-        self.last_failed_paths = self.last_failed_paths + failed_specs
+        self.rerun_examples += failed_examples
       end
 
-      self.last_run_failed = !passed
+      self.rerun_examples -= passed_examples
+
+      run_all if passed && !self.last_run_passed && options[:all_after_pass]
+      self.last_run_passed = passed
 
       throw :task_has_failed unless passed
     end

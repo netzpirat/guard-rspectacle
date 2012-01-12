@@ -1,4 +1,4 @@
-# NOTE: When using watch with block, you must return all files that should be reloaded.
+# NOTE: When using watch with a block, you must return all files that should be reloaded.
 guard :rspectacle do
   watch('spec/spec_helper.rb')                        { %w(spec/spec_helper spec) }
   watch('config/routes.rb')                           { %w(config/routes.rb spec/routing) }
