@@ -1,8 +1,15 @@
 module Guard
   class RSpectacle
 
+    # The humanity class helps to bring some randomness
+    # into the so boring and static messages from rspectacle.
+    #
     class Humanity
 
+      # Picks a random success message.
+      #
+      # @return [String] a success message
+      #
       def success
         pick [
           'How cool, all works!',
@@ -14,6 +21,10 @@ module Guard
         ]
       end
 
+      # Picks a random failure message.
+      #
+      # @return [String] a failure message
+      #
       def failure
         pick [
           'Try harder, failing.',
@@ -24,14 +35,14 @@ module Guard
         ]
       end
 
+      private
+
       # Picks one item from array at random.
       #
       # @param [Array] array of items to pick from.
+      # @return [Object] a randomly chosen item from the array
       #
-      # #### Returns
-      # * +Object+ - a randommly choosen item from the array
       def pick(items)
-        ['abc']
         items[rand items.length]
       end
 
