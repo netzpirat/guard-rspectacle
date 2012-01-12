@@ -56,12 +56,6 @@ end
 
 ## Options
 
-You can configure Guard::RSpectacle with the following options:
-
-### General options
-
-The general options configures the environment that is needed to run Guard::RSpectacular and RSpec:
-
 There are many options that can customize Guard::Jasmine to your needs. Options are simply supplied as hash when
 defining the Guard in your `Guardfile`:
 
@@ -70,6 +64,10 @@ guard :rspectacle, :cli => '--format Fuubar --backtrace --tag @focus', :all_on_s
   ...
 end
 ```
+
+### General options
+
+The general options configures the environment that is needed to run Guard::RSpectacular and RSpec:
 
 ```ruby
 :cli => '--tag @focus'                        # RSpec CLI options
