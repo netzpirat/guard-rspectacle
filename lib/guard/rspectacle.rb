@@ -27,6 +27,9 @@ module Guard
 
       watchers << ::Guard::Watcher.new(%r{^.*$})
 
+      @run_on = options[:run_on] || [:start, :change]
+      @run_on = [@run_on] unless @run_on.respond_to?(:include?)
+
       super(watchers, options)
     end
 
@@ -41,7 +44,7 @@ module Guard
       require './spec/spec_helper'
 
       Formatter.info 'RSpectacle is ready!'
-      run_all
+      run_all if run_for? :start
     end
 
     # Gets called when the Guard should reload itself.
@@ -71,6 +74,7 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_on_change(paths)
+      return unless run_for? :change
       clean_paths = Inspector.clean(paths)
       paths.each { |path| reload_file(path) }
       return unless clean_paths.any?# TODO: Maybe bug in guard: watches files not actualy matching, like stuff in db/
@@ -104,6 +108,10 @@ module Guard
 
     def cli
       options[:cli] || ''
+    end
+
+    def run_for? command
+      @run_on.include?(command)
     end
 
   end

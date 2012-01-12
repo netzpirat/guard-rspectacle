@@ -27,7 +27,23 @@ Add guard definition to your `Guardfile` by running this command:
 
 ## Usage
 
-Please read the [Guard usage documentation](https://github.com/guard/guard#readme).
+Please read the [Guard usage documentation](https://github.com/guard/guard#readme) for information about Guard.
+
+You can configure `guard-rspectacle` with the following options:
+
+```ruby
+# Guardfile
+guard :rspectacle, :cli => '--format Fuubar --backtrace --tag @focus', :run_on => :change do
+  # ... usual Guard stuff ...
+end
+```
+
+The default set of options is equal to: `:cli => '', :run_on => [:start, :change]`.
+
+`run_on` option determines when to run the specs. It can be either array or a single symbol.
+Supported value are: `[:start, :change]`.
+
+
 
 ## License
 
