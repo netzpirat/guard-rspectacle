@@ -15,6 +15,16 @@ module Guard
         attr_accessor :pending_count
         attr_accessor :failed_examples
         attr_accessor :pending_examples
+        attr_accessor :passed_examples
+      end
+
+      def initialize(output)
+        super
+        @passed_examples = []
+      end
+
+      def example_passed(example)
+        @passed_examples << example
       end
 
       def dump_summary(duration, example_count, failure_count, pending_count)
@@ -24,6 +34,7 @@ module Guard
         ::Guard::RSpectacle::Notifier.pending_count    = pending_count
         ::Guard::RSpectacle::Notifier.failed_examples  = @failed_examples.map { |example| example.location }
         ::Guard::RSpectacle::Notifier.pending_examples = @pending_examples.map { |example| example.location }
+        ::Guard::RSpectacle::Notifier.passed_examples  = @passed_examples.map { |example| example.location }
       end
 
     end
