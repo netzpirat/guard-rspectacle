@@ -13,5 +13,5 @@ if RbConfig::CONFIG['target_os'] =~ /darwin/i
 end
 if RbConfig::CONFIG['target_os'] =~ /linux/i
   gem 'rb-inotify', '>= 0.8.4'
-  gem 'libnotify',  '~> 0.3.0'
+  gem 'libnotify',  '~> 0.7.1'
 end
