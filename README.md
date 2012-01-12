@@ -17,13 +17,25 @@ If you have any questions please join us on our [Google group](http://groups.goo
 
 Please be sure to have [Guard](https://github.com/guard/guard) installed.
 
-Add it to your `Gemfile`, preferably inside the development group:
+Add it to your `Gemfile`:
 
-    gem 'guard-rspectacle', :git => 'git://github.com/netzpirat/guard-rspectacle.git'
+```ruby
+group :development
+  gem 'guard-rspectacle'
+end
+```
 
-Add guard definition to your `Guardfile` by running this command:
+and install it by running Bundler:
 
-    $ guard init rspectacle
+```bash
+$ bundle
+```
+
+Add the guard definition to your `Guardfile` by running this command:
+
+```bash
+$ guard init rspectacle
+```
 
 ## Usage
 
