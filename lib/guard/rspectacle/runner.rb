@@ -29,11 +29,15 @@ module Guard
         # #### Returns
         # * +Boolean+ - true if specs passed, false if failed
         def run(files, cli, err=$stderr, out=$stdout)
+          @last_run_files ||= []
+          files = @last_run_files if files.empty?
           # For reference, see:
           # - https://github.com/rspec/rspec-core/blob/master/lib/rspec/core/runner.rb
           # - https://github.com/rspec/rspec-core/blob/master/spec/rspec/core/configuration_options_spec.rb
           rspec_options = files | cli.to_s.split() # merge files and the passed in options for RSpec
           code = ::RSpec::Core::Runner.run(rspec_options, err, out)
+
+          @last_run_files = files
           code == 0
         end
       end

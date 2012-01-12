@@ -25,8 +25,6 @@ module Guard
     def initialize(watchers = [], options = { })
       options = DEFAULT_OPTIONS.merge(options)
 
-      watchers << ::Guard::Watcher.new(%r{^.*$})
-
       @run_on = options[:run_on] || [:start, :change]
       @run_on = [@run_on] unless @run_on.respond_to?(:include?)
 
@@ -75,10 +73,10 @@ module Guard
     #
     def run_on_change(paths)
       return unless run_for? :change
-      clean_paths = Inspector.clean(paths)
-      paths.each { |path| reload_file(path) }
-      return unless clean_paths.any?# TODO: Maybe bug in guard: watches files not actualy matching, like stuff in db/
-      passed = Runner.run(clean_paths, cli)
+
+      specs = Inspector.clean(paths)
+      (paths - specs).each { |path| reload_file(path) } # RSpec reloads the files, dont't do it twice
+      passed = Runner.run(specs, cli)
       if passed
         Formatter.notify "Awesome, passing! Will check other specs too.", :image => :success
         run_all
