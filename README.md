@@ -105,13 +105,13 @@ These options affects what system notifications (growl, libnotify or notifu) are
 
 The ability to run specs immediately comes at a cost:
 
-1. in your `Guardfile`, you have to specify which files should be reloaded (apart from specs to be executed).  But don't
+1. In your `Guardfile`, you have to specify which files should be reloaded (apart from specs to be executed).  But don't
 worry, the default template takes care of it.
-2. When a file is changed, it is reloaded using Ruby `load` method which only re-interprets the file.
-
+2. When a file is changed, it is reloaded the Ruby code with
+[Kernel#load](http://ruby-doc.org/core-1.9.3/Kernel.html#method-i-load), which only re-interprets the file.
 
 This, for example, means that a method already defined on a class (including `initialize`) will not be removed
-simply by deleting that method from source code:
+simply by deleting that method from the source code:
 
 ```ruby
 class Dinner
@@ -121,10 +121,8 @@ class Dinner
 end
 ```
 
-The spec that uses this class will fail for the obvious reason.
-So your first thought may be to just remove `initialize` method.
-
-But that will not work and you should rewrite the class above:
+The spec that uses this class will fail for the obvious reason. So your first thought may be to just remove `initialize`
+method. But that will not work and you should rewrite the class above:
 
 ```ruby
 class Dinner
@@ -134,11 +132,8 @@ class Dinner
 end
 ```
 
-When you are done testing, restart `guard` to load the file afresh.
-
-Unfortunately this inconvenience can't be fixed easily (suggest if you know how?).
-
-So just keep in mind: **you are monkey-patching within a single `guard` session**.
+When you are done testing, restart `guard` to load the file afresh. Unfortunately this inconvenience can't be fixed
+easily (suggest if you know how?). So just keep in mind: **you are monkey-patching within a single `guard` session**.
 
 ## Alternatives
 
@@ -183,8 +178,7 @@ For questions please join us in our [Google group](http://groups.google.com/grou
 
 ## Acknowledgment
 
-- [David Chelimsky][https://github.com/dchelimsky] for [RSpec][https://github.com/rspec], that enables us to write
-elegant tests with passion.
+- [David Chelimsky](https://github.com/dchelimsky) for [RSpec](https://github.com/rspec) to write elegant tests with passion.
 - All the authors of the numerous [Guards][] available for making the Guard ecosystem so much growing and comprehensive.
 
 ## License
