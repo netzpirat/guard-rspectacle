@@ -98,7 +98,7 @@ module Guard
       return unless file =~ /\.rb$/
 
       Formatter.info "Reload #{ file }"
-      load file
+      load file if File.exists?(file)
 
     rescue Exception => e
       Formatter.error "Error reloading file #{ file }: #{ e.message }"
