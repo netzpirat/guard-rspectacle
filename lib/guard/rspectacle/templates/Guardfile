@@ -1,9 +1,11 @@
+# NOTE: When using watch with block, you must return all files that should be reloaded.
 guard :rspectacle do
-  # NOTE: When using watch with block you must return all files that should be reloaded
-  watch('spec/spec_helper.rb')                        { ["spec/spec_helper", "spec"] }
-  watch('config/routes.rb')                           { ["config/routes.rb", "spec/routing"] }
-  watch('app/controllers/application_controller.rb')  { "spec/controllers" }
+  watch('spec/spec_helper.rb')                        { %W(spec/spec_helper spec) }
+  watch('config/routes.rb')                           { %W(config/routes.rb spec/routing) }
+  watch('app/controllers/application_controller.rb')  { 'spec/controllers' }
+
   watch(%r{^spec/.+_spec\.rb$})
+
   watch(%r{^app/(.+)\.rb$})                           { |m| ["app/#{m[1]}.rb", "spec/#{m[1]}_spec.rb"] }
   watch(%r{^lib/(.+)\.rb$})                           { |m| ["lib/#{m[1]}.rb", "spec/lib/#{m[1]}_spec.rb"] }
   watch(%r{^app/controllers/(.+)_controller\.rb$})    { |m| [

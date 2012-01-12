@@ -1,6 +1,6 @@
 # Guard::RSpectacle [![Build Status](https://secure.travis-ci.org/netzpirat/guard-rspectacle.png)](http://travis-ci.org/netzpirat/guard-rspectacle)
 
-Guard::RSpectacle automatically tests your application when files are modified.
+Guard::RSpectacle automatically tests your application with [RSpec]() when files are modified.
 
 Tested on MRI Ruby 1.8.7, 1.9.2, 1.9.3, REE and the latest versions of JRuby & Rubinius.
 
@@ -35,25 +35,52 @@ Guard::RSpectacle can be adapted to all kind of projects. Please read the
 [Guard documentation](https://github.com/guard/guard#readme) for more information about the Guardfile DSL.
 
 ```ruby
+# NOTE: When using watch with block, you must return all files that should be reloaded.
+guard :rspectacle do
+  watch('spec/spec_helper.rb')                        { %W(spec/spec_helper spec) }
+  watch('config/routes.rb')                           { %W(config/routes.rb spec/routing) }
+  watch('app/controllers/application_controller.rb')  { 'spec/controllers' }
+
+  watch(%r{^spec/.+_spec\.rb$})
+
+  watch(%r{^app/(.+)\.rb$})                           { |m| ["app/#{m[1]}.rb", "spec/#{m[1]}_spec.rb"] }
+  watch(%r{^lib/(.+)\.rb$})                           { |m| ["lib/#{m[1]}.rb", "spec/lib/#{m[1]}_spec.rb"] }
+  watch(%r{^app/controllers/(.+)_controller\.rb$})    { |m| [
+    "app/controllers/#{m[1]}_controller.rb",
+    "spec/controllers/#{m[1]}_spec.rb",
+    "spec/routing/#{m[1]}_routing_spec.rb",
+    "spec/acceptance/#{m[1]}_spec.rb"
+  ]}
+end
+```
+
+## Options
+
+You can configure Guard::RSpectacle with the following options:
+
+### General options
+
+The general options configures the environment that is needed to run Guard::RSpectacular and RSpec:
+
+There are many options that can customize Guard::Jasmine to your needs. Options are simply supplied as hash when
+defining the Guard in your `Guardfile`:
+
+```ruby
 guard :rspectacle, :cli => '--format Fuubar --backtrace --tag @focus', :all_on_start => false do
   ...
 end
 ```
 
-### Options
-
-You can configure `guard-rspectacle` with the following options:
-
 ```ruby
 :cli => '--tag @focus'                        # RSpec CLI options
                                               # default: ''
+```
 
-:notifications => false                       # Show success and error notifications.
-                                              # default: true
+### Spec runner options
 
-:hide_success => true                         # Disable successful spec run notification.
-                                              # default: false
+The spec runner options configures the behavior driven development (or BDD) cycle:
 
+```ruby
 :all_on_start => false                        # Run all specs on start.
                                               # default: true
 
@@ -62,6 +89,18 @@ You can configure `guard-rspectacle` with the following options:
 
 :all_after_pass => false                      # Run all specs after a suite has passed again after failing.
                                               # default: true
+```
+
+### System notifications options
+
+These options affects what system notifications (growl, libnotify or notifu) are shown after a spec run:
+
+```ruby
+:notifications => false                       # Show success and error notifications.
+                                              # default: true
+
+:hide_success => true                         # Disable successful spec run notification.
+                                              # default: false
 ```
 
 ## Important note on reloading
@@ -78,7 +117,9 @@ simply by deleting that method from source code:
 
 ```ruby
 class Dinner
-  def initialize; raise "Too early"; end
+  def initialize
+    raise "Too early"
+  end
 end
 ```
 
@@ -89,7 +130,9 @@ But that will not work and you should rewrite the class above:
 
 ```ruby
 class Dinner
-  def initialize; super; end
+  def initialize
+    super
+  end
 end
 ```
 
@@ -98,6 +141,53 @@ When you are done testing, restart `guard` to load the file afresh.
 Unfortunately this inconvenience can't be fixed easily (suggest if you know how?).
 
 So just keep in mind: **you are monkey-patching within a single `guard` session**.
+
+## Alternatives
+
+Please have a look at the rock solid [guard-rspec](https://github.com/guard/guard-rspec). Guard::Rspectacular uses it
+for continuous testing.
+
+## Issues
+
+You can report issues and feature requests to [GitHub Issues](https://github.com/netzpirat/guard-rspectacle/issues).
+Try to figure out where the issue belongs to: Is it an issue with Guard itself or with Guard::RSpectacle? Please don't
+ask question in the issue tracker, instead join us in our [Google group](http://groups.google.com/group/guard-dev) or on
+`#guard` (irc.freenode.net).
+
+When you file an issue, please try to follow to these simple rules if applicable:
+
+* Make sure you run Guard with `bundle exec` first.
+* Add debug information to the issue by running Guard with the `--verbose` option.
+* Add your `Guardfile` and `Gemfile` to the issue.
+* Make sure that the issue is reproducible with your description.
+
+## Development
+
+- Documentation hosted at [RubyDoc](http://rubydoc.info/github/guard/guard-rspectacle/master/frames).
+- Source hosted at [GitHub](https://github.com/netzpirat/guard-rspectacle).
+
+Pull requests are very welcome! Please try to follow these simple rules if applicable:
+
+* Please create a topic branch for every separate change you make.
+* Make sure your patches are well tested.
+* Update the [Yard](http://yardoc.org/) documentation.
+* Update the README.
+* Update the CHANGELOG for noteworthy changes.
+* Please **do not change** the version number.
+
+For questions please join us in our [Google group](http://groups.google.com/group/guard-dev) or on
+`#guard` (irc.freenode.net).
+
+## Contributors
+
+* [Dmytrii Nagirniak](https://github.com/dnagir)
+* [Felipe Kaufmann](https://github.com/effkay)
+
+## Acknowledgment
+
+- [David Chelimsky][https://github.com/dchelimsky] for [RSpec][https://github.com/rspec], that enables us to write
+elegant tests with passion.
+- All the authors of the numerous [Guards][] available for making the Guard ecosystem so much growing and comprehensive.
 
 ## License
 
