@@ -37,8 +37,8 @@ Guard::RSpectacle can be adapted to all kind of projects. Please read the
 ```ruby
 # NOTE: When using watch with block, you must return all files that should be reloaded.
 guard :rspectacle do
-  watch('spec/spec_helper.rb')                        { %W(spec/spec_helper spec) }
-  watch('config/routes.rb')                           { %W(config/routes.rb spec/routing) }
+  watch('spec/spec_helper.rb')                        { %w(spec/spec_helper spec) }
+  watch('config/routes.rb')                           { %w(config/routes.rb spec/routing) }
   watch('app/controllers/application_controller.rb')  { 'spec/controllers' }
 
   watch(%r{^spec/.+_spec\.rb$})
