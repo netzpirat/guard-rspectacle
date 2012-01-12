@@ -70,8 +70,8 @@ end
 The general options configures the environment that is needed to run Guard::RSpectacular and RSpec:
 
 ```ruby
-:cli => '--tag @focus'                        # RSpec CLI options
-                                              # default: ''
+:cli => '--tag @focus'              # RSpec CLI options
+                                    # default: ''
 ```
 
 ### Spec runner options
@@ -79,14 +79,14 @@ The general options configures the environment that is needed to run Guard::RSpe
 The spec runner options configures the behavior driven development (or BDD) cycle:
 
 ```ruby
-:all_on_start => false                        # Run all specs on start.
-                                              # default: true
+:all_on_start => false              # Run all specs on start.
+                                    # default: true
 
-:keep_failed => false                         # Keep failed specs and add them to the next run again.
-                                              # default: true
+:keep_failed => false               # Keep failed specs and add them to the next run again.
+                                    # default: true
 
-:all_after_pass => false                      # Run all specs after a suite has passed again after failing.
-                                              # default: true
+:all_after_pass => false            # Run all specs after a suite has passed again after failing.
+                                    # default: true
 ```
 
 ### System notifications options
@@ -94,11 +94,11 @@ The spec runner options configures the behavior driven development (or BDD) cycl
 These options affects what system notifications (growl, libnotify or notifu) are shown after a spec run:
 
 ```ruby
-:notifications => false                       # Show success and error notifications.
-                                              # default: true
+:notifications => false            # Show success and error notifications.
+                                   # default: true
 
-:hide_success => true                         # Disable successful spec run notification.
-                                              # default: false
+:hide_success => true              # Disable successful spec run notification.
+                                   # default: false
 ```
 
 ## Important note on reloading
