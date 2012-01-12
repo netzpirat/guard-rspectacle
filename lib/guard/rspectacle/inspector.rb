@@ -23,18 +23,10 @@ module Guard
             paths = paths.select { |p| rspec_spec?(p) }
           end
 
-          clear
-
           paths
         end
 
         private
-
-        # Clears the list of RSpec specs in this project.
-        #
-        def clear
-          @rspec_specs = nil
-        end
 
         # Tests if the file is valid.
         #
@@ -42,17 +34,7 @@ module Guard
         # @return [Boolean] when the file valid
         #
         def rspec_spec?(path)
-          rspec_specs.include?(path)
-        end
-
-        # Scans the project and keeps a list of all
-        # files ending with `_spec.rb` within the `spec`
-        # directory.
-        #
-        # @return [Array<String>] the valid files
-        #
-        def rspec_specs
-          @rspec_specs ||= Dir.glob('spec/**/*_spec.rb')
+          path =~ /_spec\.rb$/ && File.exists?(path)
         end
 
       end

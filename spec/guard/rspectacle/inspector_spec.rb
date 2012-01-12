@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe Guard::RSpectacle::Inspector do
   before do
-    Dir.stub(:glob).and_return ['spec/models/model_spec.rb', 'spec/constrollers/test_controller_spec.rb']
+    File.stub(:exists?) do |file|
+      ['spec/models/model_spec.rb', 'spec/constrollers/test_controller_spec.rb'].include?(file)
+    end
   end
 
   subject { Guard::RSpectacle::Inspector }
