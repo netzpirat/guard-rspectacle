@@ -41,7 +41,7 @@ end
 The default set of options is equal to: `:cli => '', :run_on => [:start, :change]`.
 
 `run_on` option determines when to run the specs. It can be either array or a single symbol.
-Supported value are: `[:start, :change]`.
+Supported values are: `[:start, :change]`.
 
 
 
