@@ -86,7 +86,7 @@ The spec runner options configures the behavior driven development (or BDD) cycl
 :keep_failed => false          # Keep failed examples and add them to the next run again.
                                # default: true
 
-:keep_failed => false          # Keep pending examples and add them to the next run again.
+:keep_pending => false         # Keep pending examples and add them to the next run again.
                                # default: true
 
 :all_after_pass => false       # Run all specs after all examples have passed again after failing.
