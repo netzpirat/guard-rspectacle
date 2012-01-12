@@ -106,9 +106,9 @@ These options affects what system notifications (growl, libnotify or notifu) are
 The ability to run specs immediately comes at a cost:
 
 1. In your `Guardfile`, you have to specify which files should be reloaded (apart from specs to be executed).  But don't
-worry, the default template takes care of it.
+   worry, the default template takes care of it.
 2. When a file is changed, it is reloaded the Ruby code with
-[Kernel#load](http://ruby-doc.org/core-1.9.3/Kernel.html#method-i-load), which only re-interprets the file.
+   Kernel#load](http://ruby-doc.org/core-1.9.3/Kernel.html#method-i-load), which only re-interprets the file.
 
 This, for example, means that a method already defined on a class (including `initialize`) will not be removed
 simply by deleting that method from the source code:
@@ -178,8 +178,10 @@ For questions please join us in our [Google group](http://groups.google.com/grou
 
 ## Acknowledgment
 
-- [David Chelimsky](https://github.com/dchelimsky) for [RSpec](https://github.com/rspec) to write elegant tests with passion.
-- All the authors of the numerous [Guards][] available for making the Guard ecosystem so much growing and comprehensive.
+- [David Chelimsky](https://github.com/dchelimsky) for [RSpec](https://github.com/rspec) to write elegant tests with
+  passion.
+- All the authors of the numerous [Guards][https://github.com/guard] available for making the Guard ecosystem so much
+  growing and comprehensive.
 
 ## License
 
