@@ -2,14 +2,14 @@
 
 Guard::RSpectacle automatically tests your application when files are modified.
 
-Tested on MRI Ruby 1.8.7, 1.9.2, REE and the latest versions of JRuby & Rubinius.
+Tested on MRI Ruby 1.8.7, 1.9.2, 1.9.3, REE and the latest versions of JRuby & Rubinius.
 
 If you have any questions please join us on our [Google group](http://groups.google.com/group/guard-dev) or on `#guard`
 (irc.freenode.net).
 
 ## Prove of concept
 
-**This is an early stage prove of concept. The idea is that Guard starts the Rails environment, reloads changed Ruby files and starts the RSpec runner embedded in the current process.**
+**This is an early stage proof of concept. The idea is that Guard starts the Rails environment, reloads changed Ruby files and starts the RSpec runner embedded in the current process.**
 
 ## Install
 
