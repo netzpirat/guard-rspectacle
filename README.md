@@ -57,7 +57,7 @@ simply by deleting that method from source code:
 
 ```ruby
 class Dinner
-  def initialize; raise "Too early; end
+  def initialize; raise "Too early"; end
 end
 ```
 
