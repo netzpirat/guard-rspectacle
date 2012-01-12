@@ -27,10 +27,11 @@ module Guard
         # @return [Array] the spec result: status, failed_examples, passed_examples, pending_examples
         #
         def run(files, options, err=$stderr, out=$stdout)
-          rspec_options = files | options[:cli].to_s.split
+          rspec_options = options[:cli].to_s.split
           rspec_options.delete('--drb')
-          rspec_options = rspec_options + rspectacular_options
+          rspec_options += rspectacular_options + files
 
+          begin
           status = ::RSpec::Core::Runner.run(rspec_options, err, out)
 
           passed           = status == 0
@@ -45,34 +46,50 @@ module Guard
           if options[:notification]
 
             message = " #{ example_count } example#{ example_count == 1 ? '' : 's' }"
-            message << ", #{ failure_count } failure#{ failure_count == 1 ? '' : 's' }"
-            message << " (#{ pending_count } pending)" if pending_count > 0
-            message << "\nin #{ round(duration) } seconds"
+              message << ", #{ failure_count } failure#{ failure_count == 1 ? '' : 's' }"
+              message << " (#{ pending_count } pending)" if pending_count > 0
+              message << "\nin #{ round(duration) } seconds"
 
-            if failure_count == 0 && pending_count == 0
-              ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.success + message,
-                                                    :title    => 'RSpec results',
-                                                    :image    => :success,
-                                                    :priority => 2) if !options[:hide_success]
+              if failure_count == 0 && pending_count == 0
+                ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.success + message,
+                                                      :title    => 'RSpec results',
+                                                      :image    => :success,
+                                                      :priority => 2) if !options[:hide_success]
 
-            elsif failure_count == 0 && pending_count > 0
-              ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.pending + message,
-                                                    :title    => 'RSpec results',
-                                                    :image    => :pending,
-                                                    :priority => -1)
+              elsif failure_count == 0 && pending_count > 0
+                ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.pending + message,
+                                                      :title    => 'RSpec results',
+                                                      :image    => :pending,
+                                                      :priority => -1)
 
-            else
-              ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.failure + message,
-                                                    :title    => 'RSpec results',
-                                                    :image    => :failed,
-                                                    :priority => -2)
+              else
+                ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.failure + message,
+                                                      :title    => 'RSpec results',
+                                                      :image    => :failed,
+                                                      :priority => -2)
+              end
             end
-          end
 
-          [passed, failed_examples, passed_examples, pending_examples]
+            [passed, relative(failed_examples), relative(passed_examples), relative(pending_examples)]
+
+          rescue Exception => e
+            ::Guard::RSpectacle::Formatter.error("Error running specs: #{ e.message }")
+
+            [false, [], [], []]
+          end
         end
 
         private
+
+        # Make all the paths relative to the current working
+        # directory (the project dir).
+        #
+        # @paramn [Array<String>] the absolute paths
+        # @return [Array<String>] the relative paths
+        #
+        def relative(paths)
+          paths.map { |path| path.gsub(Dir.pwd + '/', '') }
+        end
 
         # Returns the RSpec options needed to run RSpectacular.
         #

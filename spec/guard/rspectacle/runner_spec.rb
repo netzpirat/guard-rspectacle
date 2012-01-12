@@ -17,12 +17,12 @@ describe Guard::RSpectacle::Runner do
 
   describe '#run' do
     it 'merges the files and the cli options' do
-      ::RSpec::Core::Runner.should_receive(:run).with(%w(a_spec.rb b_spec.rb --format Fuubar --backtrace --tag @focus) + options, kind_of(IO), kind_of(IO))
+      ::RSpec::Core::Runner.should_receive(:run).with(%w(--format Fuubar --backtrace --tag @focus) + options + %w(a_spec.rb b_spec.rb), kind_of(IO), kind_of(IO))
       runner.run(%w(a_spec.rb b_spec.rb), defaults.merge({ :cli => '--format Fuubar --backtrace --tag @focus' }))
     end
 
     it 'removes the --drb option' do
-      ::RSpec::Core::Runner.should_receive(:run).with(%w(a_spec.rb b_spec.rb --format Fuubar --backtrace --tag @focus) + options, kind_of(IO), kind_of(IO))
+      ::RSpec::Core::Runner.should_receive(:run).with(%w(--format Fuubar --backtrace --tag @focus) + options + %w(a_spec.rb b_spec.rb), kind_of(IO), kind_of(IO))
       runner.run(%w(a_spec.rb b_spec.rb), defaults.merge({ :cli => '--drb --format Fuubar --backtrace --tag @focus' }))
     end
 
