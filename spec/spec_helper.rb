@@ -1,5 +1,6 @@
 require 'rspec'
 require 'guard/rspectacle'
+require 'guard/rspectacle/version'
 
 RSpec.configure do |config|
 

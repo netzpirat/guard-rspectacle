@@ -10,26 +10,40 @@ module Guard
   class RSpectacle < Guard
 
     autoload :Formatter, 'guard/rspectacle/formatter'
-    autoload :Humanity,  'guard/rspectacle/humanity'
+    autoload :Humanity, 'guard/rspectacle/humanity'
     autoload :Inspector, 'guard/rspectacle/inspector'
-    autoload :Runner,    'guard/rspectacle/runner'
+    autoload :Runner, 'guard/rspectacle/runner'
+    autoload :Reloader, 'guard/rspectacle/reloader'
+
+    attr_accessor :last_run_failed, :last_failed_paths
 
     DEFAULT_OPTIONS = {
-        :cli => ''
+        :cli => '',
+        :notification   => true,
+        :hide_success   => false,
+        :all_on_start   => true,
+        :keep_failed    => true,
+        :all_after_pass => true,
     }
 
     # Initialize Guard::RSpecRails.
     #
     # @param [Array<Guard::Watcher>] watchers the watchers in the Guard block
     # @param [Hash] options the options for the Guard
+    # @option options [String] :cli the RSpec CLI options
+    # @option options [Boolean] :notification show notifications
+    # @option options [Boolean] :hide_success hide success message notification
+    # @option options [Boolean] :all_on_start Run all specs on start
+    # @option options [Boolean] :keep_failed keep failed suites and add them to the next run again
+    # @option options [Boolean] :all_after_pass run all suites after a suite has passed again after failing
     #
-    def initialize(watchers = [], options = { })
+    def initialize(watchers = [], options = {})
       options = DEFAULT_OPTIONS.merge(options)
 
-      @run_on = options[:run_on] || [:start, :change]
-      @run_on = [@run_on] unless @run_on.respond_to?(:include?)
-
       super(watchers, options)
+
+      self.last_run_failed = false
+      self.last_failed_paths = []
     end
 
     # Gets called once when Guard starts.
@@ -38,12 +52,10 @@ module Guard
     #
     def start
       ENV['RAILS_ENV'] ||= 'test'
-      Formatter.info "Starting RSpectacle #{ ENV['RAILS_ENV'] } environment"
-
       require './spec/spec_helper'
 
-      Formatter.info 'RSpectacle is ready!'
-      run_all if run_for? :start
+      Formatter.info "RSpectacle is ready in #{ ENV['RAILS_ENV'] } environment."
+      run_all if options[:all_on_start]
     end
 
     # Gets called when the Guard should reload itself.
@@ -51,7 +63,10 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def reload
-      Dir.glob('**/*').each { |file| reload_file(file) }
+      Dir.glob('**/*.rb').each { |file| Reloader.reload_file(file) }
+
+      self.last_run_failed = false
+      self.last_failed_paths = []
     end
 
     # Gets called when all specs should be run.
@@ -59,12 +74,12 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_all
-      passed = Runner.run(['spec'], cli)
-      if passed
-        Formatter.notify Humanity.success, :image => :success
-      else
-        Formatter.notify Humanity.failure, :image => :failed
-      end
+      passed, failed_specs = Runner.run(['spec'], options)
+
+      self.last_failed_paths = failed_specs
+      self.last_run_failed = !passed
+
+      throw :task_has_failed unless passed
     end
 
     # Gets called when watched paths and files have changes.
@@ -73,44 +88,26 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_on_change(paths)
-      return unless run_for? :change
-
       specs = Inspector.clean(paths)
-      (paths - specs).each { |path| reload_file(path) } # RSpec reloads the files, dont't do it twice
-      passed = Runner.run(specs, cli)
+      return false if specs.empty?
+
+      specs += self.last_failed_paths if options[:keep_failed]
+
+      # RSpec reloads the files, so reload only non spec files
+      (paths - specs).each { |path| Reloader.reload_file(path) }
+
+      passed, failed_specs = Runner.run(specs, options)
+
       if passed
-        Formatter.notify Humanity.success, :image => :success
-        run_all
+        self.last_failed_paths = self.last_failed_paths - paths
+        run_all if self.last_run_failed && options[:all_after_pass]
       else
-        Formatter.notify Humanity.failure, :image => :failed
+        self.last_failed_paths = self.last_failed_paths + failed_specs
       end
-    end
 
-    private
+      self.last_run_failed = !passed
 
-    # Reloads the given file.
-    #
-    # @param [String] file the changed file
-    # @raise [:task_has_failed] when run_on_change has failed
-    #
-    def reload_file(file)
-      return unless file =~ /\.rb$/
-
-      Formatter.info "Reload #{ file }"
-      load file if File.exists?(file)
-
-    rescue Exception => e
-      Formatter.error "Error reloading file #{ file }: #{ e.message }"
-
-      throw :task_has_failed
-    end
-
-    def cli
-      options[:cli] || ''
-    end
-
-    def run_for? command
-      @run_on.include?(command)
+      throw :task_has_failed unless passed
     end
 
   end

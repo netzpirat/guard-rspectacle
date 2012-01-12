@@ -29,20 +29,40 @@ Add guard definition to your `Guardfile` by running this command:
 
 Please read the [Guard usage documentation](https://github.com/guard/guard#readme) for information about Guard.
 
-You can configure `guard-rspectacle` with the following options:
+## Guardfile
+
+Guard::RSpectacle can be adapted to all kind of projects. Please read the
+[Guard documentation](https://github.com/guard/guard#readme) for more information about the Guardfile DSL.
 
 ```ruby
-# Guardfile
-guard :rspectacle, :cli => '--format Fuubar --backtrace --tag @focus', :run_on => :change do
-  # ... usual Guard stuff ...
+guard :rspectacle, :cli => '--format Fuubar --backtrace --tag @focus', :all_on_start => false do
+  ...
 end
 ```
 
-The default set of options is equal to: `:cli => '', :run_on => [:start, :change]`.
+### Options
 
-`run_on` option determines when to run the specs. It can be either array or a single symbol.
-Supported values are: `[:start, :change]`.
+You can configure `guard-rspectacle` with the following options:
 
+```ruby
+:cli => '--tag @focus'                        # RSpec CLI options
+                                              # default: ''
+
+:notifications => false                       # Show success and error notifications.
+                                              # default: true
+
+:hide_success => true                         # Disable successful spec run notification.
+                                              # default: false
+
+:all_on_start => false                        # Run all specs on start.
+                                              # default: true
+
+:keep_failed => false                         # Keep failed specs and add them to the next run again.
+                                              # default: true
+
+:all_after_pass => false                      # Run all specs after a suite has passed again after failing.
+                                              # default: true
+```
 
 ## Important note on reloading
 
