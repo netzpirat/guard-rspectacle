@@ -44,6 +44,39 @@ The default set of options is equal to: `:cli => '', :run_on => [:start, :change
 Supported values are: `[:start, :change]`.
 
 
+## Important note on reloading
+
+The ability to run specs immediately comes at a cost:
+
+1. in your `Guardfile`, you have to specify which files should be reloaded (apart from specs to be executed).  But don't worry, the default template takes care of it.
+2. When a file is changed, it is reloaded using Ruby `reload` method which only re-interprets the file.
+
+
+This, for example, means that a method already defined on a class (including `initialize`) will not be removed
+simply by deleting that method from source code:
+
+```ruby
+class Dinner
+  def initialize; raise "Too early; end
+end
+```
+
+The spec that uses this class will fail for the obvious reason.
+So your first thought may be to just remove `initialize` method.
+
+But that will not work and you should rewrite the class above:
+
+```ruby
+class Dinner
+  def initialize; super; end
+end
+```
+
+When you are done testing, restart `guard` to load the file afresh.
+
+Unfortunately this inconvenience can't be fixed easily (suggest if you know how?).
+
+So just keep in mind: **you are monkey-patching within a single `guard` session**.
 
 ## License
 
