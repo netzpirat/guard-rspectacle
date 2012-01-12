@@ -184,7 +184,7 @@ For questions please join us in our [Google group](http://groups.google.com/grou
 
 - [David Chelimsky](https://github.com/dchelimsky) for [RSpec](https://github.com/rspec) to write elegant tests with
   passion.
-- All the authors of the numerous [Guards][https://github.com/guard] available for making the Guard ecosystem so much
+- All the authors of the numerous [Guards](https://github.com/guard) available for making the Guard ecosystem so much
   growing and comprehensive.
 
 ## License
