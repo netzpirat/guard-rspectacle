@@ -2,21 +2,24 @@ require 'spec_helper'
 
 describe Guard::RSpectacle::Humanity do
 
-  its(:success) { should be_a String }
-  its(:failure) { should be_a String }
+  describe '.success' do
+    it 'returns a success message' do
+      described_class.success.should be_a String
+    end
 
-  its(:success) { should_not be_empty }
-  its(:failure) { should_not be_empty }
-
-  describe "#success" do
-    it "should be random" do
-      (1..10).map{ subject.success }.uniq.size.should > 1
+    it 'returns a random message' do
+      (1..10).map{ described_class.success }.uniq.size.should > 1
     end
   end
 
-  describe "#failure" do
-    it "should be random" do
-      (1..10).map{ subject.failure }.uniq.size.should > 1
+  describe '.failure' do
+    it 'returns a failure message' do
+      described_class.success.should be_a String
+    end
+
+    it 'returns a random message' do
+      (1..10).map{ described_class.failure }.uniq.size.should > 1
     end
   end
+
 end

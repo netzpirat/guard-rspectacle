@@ -8,7 +8,6 @@ module Guard
   # Guard events: `start`, `stop`, `reload`, `run_all` and `run_on_change`.
   #
   class RSpectacle < Guard
-    attr_accessor :humanity
 
     autoload :Formatter, 'guard/rspectacle/formatter'
     autoload :Humanity,  'guard/rspectacle/humanity'
@@ -29,8 +28,6 @@ module Guard
 
       @run_on = options[:run_on] || [:start, :change]
       @run_on = [@run_on] unless @run_on.respond_to?(:include?)
-
-      self.humanity = Humanity.new
 
       super(watchers, options)
     end
@@ -64,9 +61,9 @@ module Guard
     def run_all
       passed = Runner.run(['spec'], cli)
       if passed
-        Formatter.notify humanity.success, :image => :success
+        Formatter.notify Humanity.success, :image => :success
       else
-        Formatter.notify humanity.failure, :image => :failed
+        Formatter.notify Humanity.failure, :image => :failed
       end
     end
 
@@ -82,10 +79,10 @@ module Guard
       (paths - specs).each { |path| reload_file(path) } # RSpec reloads the files, dont't do it twice
       passed = Runner.run(specs, cli)
       if passed
-        Formatter.notify humanity.success, :image => :success
+        Formatter.notify Humanity.success, :image => :success
         run_all
       else
-        Formatter.notify humanity.failure, :image => :failed
+        Formatter.notify Humanity.failure, :image => :failed
       end
     end
 
