@@ -14,6 +14,7 @@ module Guard
     autoload :Inspector, 'guard/rspectacle/inspector'
     autoload :Runner, 'guard/rspectacle/runner'
     autoload :Reloader, 'guard/rspectacle/reloader'
+    autoload :Notifier, 'guard/rspectacle/notifier'
 
     attr_accessor :last_run_failed, :last_failed_paths
 

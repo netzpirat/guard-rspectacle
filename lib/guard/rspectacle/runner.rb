@@ -24,24 +24,91 @@ module Guard
         # @option options [Boolean] :hide_success hide success message notification
         # @param [IO] err the error stream
         # @param [IO] out the output stream
-        # @return [Boolean] true if specs passed, false if failed
+        # @return [Array<Boolean, Array<String>>] the spec result
         #
         def run(files, options, err=$stderr, out=$stdout)
           rspec_options = files | options[:cli].to_s.split
+          rspec_options.delete('--drb')
+          rspec_options = rspec_options + rspectacular_options
+
           status = ::RSpec::Core::Runner.run(rspec_options, err, out)
 
-          passed = status == 0
+          passed        = status == 0
+          failed_specs  = ::Guard::RSpectacle::Notifier.failed_examples || []
+          duration      = ::Guard::RSpectacle::Notifier.duration || 0.0
+          example_count = ::Guard::RSpectacle::Notifier.example_count || -1
+          failure_count = ::Guard::RSpectacle::Notifier.failure_count || -1
+          pending_count = ::Guard::RSpectacle::Notifier.pending_count || -1
 
-          # TODO: Get failed specs
-          failed_specs = []
+          if options[:notification]
 
-          if passed
-            ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.success, :image => :success) if options[:notification] && !options[:hide_success]
-          else
-            ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.failure, :image => :failed) if options[:notification]
+            message = " #{ example_count } examples, #{ failure_count } failures"
+            message << " (#{ pending_count } pending)" if pending_count > 0
+            message << "\nin #{ round(duration) } seconds"
+
+            if failure_count == 0 && pending_count == 0
+              ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.success + message,
+                                                    :title => 'RSpec results',
+                                                    :image => :success,
+                                                    :priority => 2) if !options[:hide_success]
+
+            elsif failure_count == 0 && pending_count > 0
+              ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.pending + message,
+                                                    :title => 'RSpec results',
+                                                    :image => :pending,
+                                                    :priority => -1)
+
+            else
+              ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.failure + message,
+                                                    :title => 'RSpec results',
+                                                    :image => :failed,
+                                                    :priority => -2)
+            end
           end
 
           [passed, failed_specs]
+        end
+
+        private
+
+        # Returns the RSpec options needed to run RSpectacular.
+        #
+        # @return [Array<String>] the cli options
+        #
+        def rspectacular_options
+          options = []
+
+          options << '--require'
+          options << "#{ File.dirname(__FILE__) }/notifier.rb"
+          options << '--format'
+          options << 'Guard::RSpectacle::Notifier'
+          options << '--out'
+          options << null_device
+
+          options
+        end
+
+        # Returns a null device for all OS.
+        #
+        # @return [String] the name of the null device
+        #
+        def null_device
+          RUBY_PLATFORM.index('mswin') ? 'NUL' : '/dev/null'
+        end
+
+        # Round the float.
+        #
+        # @param [Float] float the number
+        # @param [Integer] decimals the decimals to round to
+        # @return [Float] the rounded float
+        #
+        def round(float, decimals=4)
+          if Float.instance_method(:round).arity == 0 # Ruby 1.8
+            factor = 10**decimals
+            (float*factor).round / factor.to_f
+          else # Ruby 1.9
+            float.round(decimals)
+          end
         end
       end
 

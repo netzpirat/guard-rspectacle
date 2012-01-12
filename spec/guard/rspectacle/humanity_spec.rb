@@ -14,6 +14,16 @@ describe Guard::RSpectacle::Humanity do
     end
   end
 
+  describe '.pending' do
+    it 'returns a pending message' do
+      described_class.success.should be_a String
+    end
+
+    it 'returns a random message' do
+      (1..10).map{ described_class.pending }.uniq.size.should > 1
+    end
+  end
+
   describe '.failure' do
     it 'returns a failure message' do
       described_class.success.should be_a String

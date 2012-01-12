@@ -22,6 +22,18 @@ module Guard
                ]
         end
 
+        # Picks a random pending message.
+        #
+        # @return [String] a pending message
+        #
+        def pending
+          pick [
+                   'Almost there!',
+                   'Final spurt!',
+                   'One more please!'
+               ]
+        end
+
         # Picks a random failure message.
         #
         # @return [String] a failure message
@@ -30,7 +42,7 @@ module Guard
           pick [
                    'Try harder, failing.',
                    'Failing, not there yet...',
-                   'Ups, I did it again.',
+                   'Ups, you did it again.',
                    'Nope.',
                    'Still red.'
                ]
