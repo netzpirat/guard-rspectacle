@@ -68,8 +68,9 @@ You can configure `guard-rspectacle` with the following options:
 
 The ability to run specs immediately comes at a cost:
 
-1. in your `Guardfile`, you have to specify which files should be reloaded (apart from specs to be executed).  But don't worry, the default template takes care of it.
-2. When a file is changed, it is reloaded using Ruby `reload` method which only re-interprets the file.
+1. in your `Guardfile`, you have to specify which files should be reloaded (apart from specs to be executed).  But don't
+worry, the default template takes care of it.
+2. When a file is changed, it is reloaded using Ruby `load` method which only re-interprets the file.
 
 
 This, for example, means that a method already defined on a class (including `initialize`) will not be removed
@@ -102,7 +103,7 @@ So just keep in mind: **you are monkey-patching within a single `guard` session*
 
 (The MIT License)
 
-Copyright (c) 2011 Michael Kessler
+Copyright (c) 2012 Michael Kessler
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
