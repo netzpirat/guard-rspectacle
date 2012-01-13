@@ -122,8 +122,7 @@ These options affects what system notifications (growl, libnotify or notifu) are
                                # default: false
 ```
 
-<a name='#reloading'/>
-## Important note on reloading
+## Important note on reloading<a id="reloading"/>
 
 The ability to run specs immediately comes at a cost:
 
