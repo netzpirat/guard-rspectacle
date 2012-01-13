@@ -87,6 +87,8 @@ The general options configures the environment that is needed to run Guard::RSpe
                                # default: ''
 ```
 
+Spork is not needed (and supported), thus the `--drb` flag will be removed from the `:cli` options.
+
 ### Spec runner options
 
 The spec runner options configures the behavior driven development (or BDD) cycle:
