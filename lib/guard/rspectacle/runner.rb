@@ -17,7 +17,7 @@ module Guard
         # - https://github.com/rspec/rspec-core/blob/master/lib/rspec/core/runner.rb
         # - https://github.com/rspec/rspec-core/blob/master/spec/rspec/core/configuration_options_spec.rb
         #
-        # @param [Array<String>] files the specs to run
+        # @param [Array<String>] examples the specs to run
         # @param [Hash] options the options
         # @option options [String] :cli the RSpec CLI options
         # @option options [Boolean] :notification show notifications
@@ -26,10 +26,13 @@ module Guard
         # @param [IO] out the output stream
         # @return [Array] the spec result: status, failed_examples, passed_examples, pending_examples
         #
-        def run(files, options, err=$stderr, out=$stdout)
+        def run(examples, options, err=$stderr, out=$stdout)
+          message = options[:message] || "Run specs #{ examples.join(' ') }"
+          ::Guard::UI.info(message, :reset => true)
+
           rspec_options = options[:cli].to_s.split
           rspec_options.delete('--drb')
-          rspec_options += rspectacular_options + files
+          rspec_options += rspectacular_options + examples
 
           begin
           status = ::RSpec::Core::Runner.run(rspec_options, err, out)

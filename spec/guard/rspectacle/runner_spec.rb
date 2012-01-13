@@ -26,6 +26,20 @@ describe Guard::RSpectacle::Runner do
       runner.run(%w(a_spec.rb b_spec.rb), defaults.merge({ :cli => '--drb --format Fuubar --backtrace --tag @focus' }))
     end
 
+    context 'without a message option' do
+      it 'shows an info message with all the examples to run' do
+        ::Guard::UI.should_receive(:info).with('Run specs a_spec.rb b_spec.rb', { :reset=>true })
+        runner.run(%w(a_spec.rb b_spec.rb), defaults)
+      end
+    end
+
+    context 'with a message option' do
+      it 'shows the given message' do
+        ::Guard::UI.should_receive(:info).with('Running all specs', { :reset=>true })
+        runner.run(%w(a_spec.rb b_spec.rb), defaults.merge({ :message => 'Running all specs' }))
+      end
+    end
+
     context 'given the spec run is successful' do
       before do
         ::RSpec::Core::Runner.stub(:run).and_return 0

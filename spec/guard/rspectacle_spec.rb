@@ -175,7 +175,7 @@ describe Guard::RSpectacle do
 
   describe '.run_all' do
     it 'starts the Runner with the spec dir' do
-      runner.should_receive(:run).with(['spec'], defaults).and_return [true, [], [], []]
+      runner.should_receive(:run).with(['spec'], defaults.merge({ :message => 'Run all specs'})).and_return [true, [], [], []]
       guard.run_all
     end
 

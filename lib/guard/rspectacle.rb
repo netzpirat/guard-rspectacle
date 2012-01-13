@@ -77,7 +77,7 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_all
-      passed, failed_examples, passed_examples, pending_examples = Runner.run(['spec'], options)
+      passed, failed_examples, passed_examples, pending_examples = Runner.run(['spec'], options.merge({ :message => 'Run all specs'}))
 
       if options[:keep_pending]
         self.rerun_examples = failed_examples + pending_examples
