@@ -28,15 +28,15 @@ describe Guard::RSpectacle::Runner do
 
     context 'without a message option' do
       it 'shows an info message with all the examples to run' do
-        ::Guard::UI.should_receive(:info).with('Run specs a_spec.rb b_spec.rb', { :reset=>true })
+        ::Guard::UI.should_receive(:info).with('Run a_spec.rb b_spec.rb', { :reset=>true })
         runner.run(%w(a_spec.rb b_spec.rb), defaults)
       end
     end
 
     context 'with a message option' do
       it 'shows the given message' do
-        ::Guard::UI.should_receive(:info).with('Running all specs', { :reset=>true })
-        runner.run(%w(a_spec.rb b_spec.rb), defaults.merge({ :message => 'Running all specs' }))
+        ::Guard::UI.should_receive(:info).with('Run all specs', { :reset=>true })
+        runner.run(%w(a_spec.rb b_spec.rb), defaults.merge({ :message => 'Run all specs' }))
       end
     end
 

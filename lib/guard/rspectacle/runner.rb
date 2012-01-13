@@ -27,7 +27,7 @@ module Guard
         # @return [Array] the spec result: status, failed_examples, passed_examples, pending_examples
         #
         def run(examples, options, err=$stderr, out=$stdout)
-          message = options[:message] || "Run specs #{ examples.join(' ') }"
+          message = options[:message] || "Run #{ examples.join(' ') }"
           ::Guard::UI.info(message, :reset => true)
 
           rspec_options = options[:cli].to_s.split
