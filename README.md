@@ -10,7 +10,7 @@ If you have any questions please join us on our [Google group](http://groups.goo
 ## How it works
 
 The idea is that Guard starts the Rails environment, reloads changed Ruby files and starts the RSpec runner embedded in
-the current process. Please be sure to [understand the limitation](#reloading) of this approach.
+the current process. **Please be sure to [understand the limitation](#reloading) of this approach.**
 
 If you want to use a safer approach to run your specs, try [guard-rspec](https://github.com/guard/guard-rspec).
 
@@ -122,7 +122,7 @@ These options affects what system notifications (growl, libnotify or notifu) are
                                # default: false
 ```
 
-<a name='#reloading'>
+<a name='#reloading'/>
 ## Important note on reloading
 
 The ability to run specs immediately comes at a cost:
