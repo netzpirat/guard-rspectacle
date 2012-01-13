@@ -32,6 +32,7 @@ module Guard
 
           rspec_options = options[:cli].to_s.split
           rspec_options.delete('--drb')
+          rspec_options.delete('-X')
           rspec_options += rspectacular_options + examples
 
           begin
