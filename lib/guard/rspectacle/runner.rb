@@ -76,7 +76,7 @@ module Guard
           rescue Exception => e
             ::Guard::RSpectacle::Formatter.error("Error running specs: #{ e.message }")
 
-            [false, [], [], []]
+            [false, [], []]
           end
         end
 
