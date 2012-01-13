@@ -36,19 +36,19 @@ module Guard
           rspec_options += rspectacular_options + examples
 
           begin
-          status = ::RSpec::Core::Runner.run(rspec_options, err, out)
+            status = ::RSpec::Core::Runner.run(rspec_options, err, out)
 
-          passed           = status == 0
-          failed_examples  = ::Guard::RSpectacle::Notifier.failed_examples || []
-          passed_examples  = ::Guard::RSpectacle::Notifier.passed_examples || []
-          duration         = ::Guard::RSpectacle::Notifier.duration || 0.0
-          example_count    = ::Guard::RSpectacle::Notifier.example_count || -1
-          failure_count    = ::Guard::RSpectacle::Notifier.failure_count || -1
-          pending_count    = ::Guard::RSpectacle::Notifier.pending_count || -1
+            passed          = status == 0
+            failed_examples = ::Guard::RSpectacle::Notifier.failed_examples || []
+            passed_examples = ::Guard::RSpectacle::Notifier.passed_examples || []
+            duration        = ::Guard::RSpectacle::Notifier.duration || 0.0
+            example_count   = ::Guard::RSpectacle::Notifier.example_count || -1
+            failure_count   = ::Guard::RSpectacle::Notifier.failure_count || -1
+            pending_count   = ::Guard::RSpectacle::Notifier.pending_count || -1
 
-          if options[:notification]
+            if options[:notification]
 
-            message = " #{ example_count } example#{ example_count == 1 ? '' : 's' }"
+              message = " #{ example_count } example#{ example_count == 1 ? '' : 's' }"
               message << ", #{ failure_count } failure#{ failure_count == 1 ? '' : 's' }"
               message << " (#{ pending_count } pending)" if pending_count > 0
               message << "\nin #{ round(duration) } seconds"
