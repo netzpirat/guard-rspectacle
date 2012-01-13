@@ -53,23 +53,21 @@ module Guard
               message << " (#{ pending_count } pending)" if pending_count > 0
               message << "\nin #{ round(duration) } seconds"
 
-              if failure_count == 0 && pending_count == 0
-                ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.success + message,
-                                                      :title    => 'RSpec results',
-                                                      :image    => :success,
-                                                      :priority => 2) if !options[:hide_success]
-
-              elsif failure_count == 0 && pending_count > 0
-                ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.pending + message,
-                                                      :title    => 'RSpec results',
-                                                      :image    => :pending,
-                                                      :priority => -1)
-
-              else
+              if failure_count > 0
                 ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.failure + message,
                                                       :title    => 'RSpec results',
                                                       :image    => :failed,
                                                       :priority => -2)
+              elsif pending_count > 0
+                ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.pending + message,
+                                                      :title    => 'RSpec results',
+                                                      :image    => :pending,
+                                                      :priority => -1)
+              else
+                ::Guard::RSpectacle::Formatter.notify(::Guard::RSpectacle::Humanity.success + message,
+                                                      :title    => 'RSpec results',
+                                                      :image    => :success,
+                                                      :priority => 2) if !options[:hide_success]
               end
             end
 
