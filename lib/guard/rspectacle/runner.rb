@@ -85,7 +85,7 @@ module Guard
         # Make all the paths relative to the current working
         # directory (the project dir).
         #
-        # @paramn [Array<String>] the absolute paths
+        # @param [Array<String>] the absolute paths
         # @return [Array<String>] the relative paths
         #
         def relative(paths)
