@@ -7,9 +7,12 @@ Tested on MRI Ruby 1.8.7, 1.9.2, 1.9.3, REE and the latest versions of JRuby & R
 If you have any questions please join us on our [Google group](http://groups.google.com/group/guard-dev) or on `#guard`
 (irc.freenode.net).
 
-## Prove of concept
+## How it works
 
-**This is an early stage proof of concept. The idea is that Guard starts the Rails environment, reloads changed Ruby files and starts the RSpec runner embedded in the current process.**
+The idea is that Guard starts the Rails environment, reloads changed Ruby files and starts the RSpec runner embedded in
+the current process. Please be sure to [understand the limitation](#reloading) of this approach.
+
+If you want to use a safer approach to run your specs, try [guard-rspec](https://github.com/guard/guard-rspec).
 
 ## Install
 
@@ -119,6 +122,7 @@ These options affects what system notifications (growl, libnotify or notifu) are
                                # default: false
 ```
 
+<a name='#reloading'>
 ## Important note on reloading
 
 The ability to run specs immediately comes at a cost:
