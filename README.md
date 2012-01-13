@@ -69,7 +69,7 @@ end
 
 ## Options
 
-There are many options that can customize Guard::Jasmine to your needs. Options are simply supplied as hash when
+There are many options that can customize Guard::RSpectacle to your needs. Options are simply supplied as hash when
 defining the Guard in your `Guardfile`:
 
 ```ruby
