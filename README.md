@@ -83,7 +83,7 @@ end
 
 ### General options
 
-The general options configures the environment that is needed to run Guard::RSpectacular and RSpec:
+The general options configures the environment that is needed to run Guard::RSpectacle and RSpec:
 
 ```ruby
 :cli => '--tag @focus'         # RSpec CLI options
@@ -159,7 +159,7 @@ easily (suggest if you know how?). So just keep in mind: **you are monkey-patchi
 
 ## Alternatives
 
-Please have a look at the rock solid [guard-rspec](https://github.com/guard/guard-rspec). Guard::Rspectacular uses it
+Please have a look at the rock solid [guard-rspec](https://github.com/guard/guard-rspec). Guard::RSpectacle uses it
 for continuous testing.
 
 ## Issues
