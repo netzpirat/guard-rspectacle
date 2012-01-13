@@ -13,7 +13,7 @@ describe Guard::RSpectacle do
 
   before do
     inspector.stub(:clean).and_return { |specs| specs }
-    runner.stub(:run).and_return [true, [], [], []]
+    runner.stub(:run).and_return [true, [], []]
     formatter.stub(:notify)
   end
 
@@ -23,7 +23,7 @@ describe Guard::RSpectacle do
     end
 
     it 'clears the last failed paths' do
-      guard.rerun_examples.should be_empty
+      guard.rerun_specs.should be_empty
     end
 
     context 'when no options are provided' do
@@ -49,10 +49,6 @@ describe Guard::RSpectacle do
 
       it 'sets a default :keep_failed option' do
         guard.options[:keep_failed].should be_true
-      end
-
-      it 'sets a default :keep_pending option' do
-        guard.options[:keep_pending].should be_true
       end
     end
 
@@ -83,10 +79,6 @@ describe Guard::RSpectacle do
 
       it 'sets the :keep_failed option' do
         guard.options[:keep_failed].should be_false
-      end
-
-      it 'sets the :keep_pending option' do
-        guard.options[:keep_pending].should be_false
       end
 
       it 'sets the :all_after_pass option' do
@@ -151,7 +143,7 @@ describe Guard::RSpectacle do
   describe '.reload' do
     before do
       guard.last_run_passed = true
-      guard.rerun_examples  = %w(spec/models/user_spec.rb)
+      guard.rerun_specs  = %w(spec/models/user_spec.rb)
       Dir.stub(:glob).and_return %w(spec/models/user_spec.rb spec/models/role_spec.rb)
       reloader.stub(:reload_file)
     end
@@ -169,40 +161,26 @@ describe Guard::RSpectacle do
 
     it 'sets last failed paths to empty' do
       guard.reload
-      guard.rerun_examples.should be_empty
+      guard.rerun_specs.should be_empty
     end
   end
 
   describe '.run_all' do
     it 'starts the Runner with the spec dir' do
-      runner.should_receive(:run).with(['spec'], defaults.merge({ :message => 'Run all specs'})).and_return [true, [], [], []]
+      runner.should_receive(:run).with(['spec'], defaults.merge({ :message => 'Run all specs'})).and_return [true, [], []]
       guard.run_all
     end
 
-    context 'when keeping the pending examples' do
-      let(:guard) { Guard::RSpectacle.new(nil, { :keep_pending => true }) }
-
-      it 'adds the failed and the pending examples to the examples to be rerun' do
-        runner.stub(:run).and_return [true, %w(spec/models/role_spec.rb), [], %w(spec/models/user_spec.rb)]
-        guard.run_all
-        guard.rerun_examples.should =~ %w(spec/models/role_spec.rb spec/models/user_spec.rb)
-      end
-    end
-
-    context 'without keeping the pending examples' do
-      let(:guard) { Guard::RSpectacle.new(nil, { :keep_pending => false }) }
-
-      it 'adds the only the failed examples to the examples to be rerun' do
-        runner.stub(:run).and_return [true, %w(spec/models/role_spec.rb), %w(spec/models/user_spec.rb), []]
-        guard.run_all
-        guard.rerun_examples.should =~ %w(spec/models/role_spec.rb)
-      end
+    it 'adds sets the failed specs to the specs to be rerun' do
+      runner.stub(:run).and_return [true, %w(spec/models/role_spec.rb), %w(spec/models/user_spec.rb), []]
+      guard.run_all
+      guard.rerun_specs.should =~ %w(spec/models/role_spec.rb)
     end
 
     context 'when passing passing the run' do
       before do
         guard.last_run_passed = false
-        runner.stub(:run).and_return [true, [], [], []]
+        runner.stub(:run).and_return [true, [], []]
       end
 
       it 'sets the last run passed to true' do
@@ -214,7 +192,7 @@ describe Guard::RSpectacle do
     context 'when not passing the run' do
       before do
         guard.last_run_passed = true
-        runner.stub(:run).and_return [false, %w(spec/models/role_spec.rb), [], []]
+        runner.stub(:run).and_return [false, %w(spec/models/role_spec.rb), []]
       end
 
       it 'sets the last run passed to false' do
@@ -247,15 +225,21 @@ describe Guard::RSpectacle do
 
     it 'starts the Runner with the cleaned files' do
       inspector.should_receive(:clean).with(%w(spec/models/user_spec.rb spec/models/role_spec.rb)).and_return %w(spec/models/user_spec.rb)
-      runner.should_receive(:run).with(%w(spec/models/user_spec.rb), defaults).and_return [true, %w(spec/models/user_spec.rb), [], []]
+      runner.should_receive(:run).with(%w(spec/models/user_spec.rb), defaults).and_return [true, %w(spec/models/user_spec.rb), []]
       guard.run_on_change(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
+    end
+
+    it 'adds the failed specs to the specs to be rerun' do
+      runner.stub(:run).and_return [true, %w(spec/models/role_spec.rb), %w(spec/models/user_spec.rb)]
+      guard.run_on_change(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
+      guard.rerun_specs.should =~ %w(spec/models/role_spec.rb)
     end
 
     context 'with :keep_failed enabled' do
       let(:guard) { Guard::RSpectacle.new(nil, { :keep_failed => true }) }
 
       before do
-        guard.rerun_examples = %w(spec/models/role_spec.rb)
+        guard.rerun_specs = %w(spec/models/role_spec.rb)
       end
 
       it 'appends the last failed paths to the current run' do
@@ -264,40 +248,12 @@ describe Guard::RSpectacle do
       end
     end
 
-    context 'when keeping the pending examples' do
-      let(:guard) { Guard::RSpectacle.new(nil, { :keep_pending => true }) }
-
-      before do
-        guard.rerun_examples = %w(spec/models/permission_spec.rb)
-      end
-
-      it 'adds the failed and the pending examples to the examples to be rerun' do
-        runner.stub(:run).and_return [true, %w(spec/models/role_spec.rb), [], %w(spec/models/user_spec.rb)]
-        guard.run_on_change(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
-        guard.rerun_examples.should =~ %w(spec/models/permission_spec.rb spec/models/role_spec.rb spec/models/user_spec.rb)
-      end
-    end
-
-    context 'without keeping the pending examples' do
-      let(:guard) { Guard::RSpectacle.new(nil, { :keep_pending => false }) }
-
-      before do
-        guard.rerun_examples = %w(spec/models/permission_spec.rb)
-      end
-
-      it 'adds the only the failed examples to the examples to be rerun' do
-        runner.stub(:run).and_return [true, %w(spec/models/role_spec.rb), %w(spec/models/user_spec.rb), []]
-        guard.run_on_change(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
-        guard.rerun_examples.should =~ %w(spec/models/permission_spec.rb spec/models/role_spec.rb)
-      end
-    end
-
     context 'when passing passing the run' do
       before do
         guard.stub(:run_all)
         guard.last_run_passed = false
-        guard.rerun_examples = %w(spec/models/permission_spec.rb spec/models/role_spec.rb)
-        runner.stub(:run).and_return [true, [], %w(spec/models/permission_spec.rb), []]
+        guard.rerun_specs = %w(spec/models/permission_spec.rb spec/models/role_spec.rb)
+        runner.stub(:run).and_return [true, [], %w(spec/models/permission_spec.rb)]
       end
 
       it 'sets the last run passed to true' do
@@ -305,9 +261,9 @@ describe Guard::RSpectacle do
         guard.last_run_passed.should be_true
       end
 
-      it 'removes the passed examples from the rerun examples' do
+      it 'removes the passed specs from the rerun specs' do
         guard.run_on_change(%w(spec/models/permission_spec.rb))
-        guard.rerun_examples.should =~ %w(spec/models/role_spec.rb)
+        guard.rerun_specs.should =~ %w(spec/models/role_spec.rb)
       end
 
       context 'given the :all_after_pass option' do
@@ -315,11 +271,11 @@ describe Guard::RSpectacle do
 
         before do
           guard.last_run_passed = false
-          guard.rerun_examples = %w(spec/models/permission_spec.rb)
+          guard.rerun_specs = %w(spec/models/permission_spec.rb)
         end
 
         it 'runs all specs' do
-          runner.stub(:run).and_return [true, [], %w(spec/models/permission_spec.rb), []]
+          runner.stub(:run).and_return [true, [], %w(spec/models/permission_spec.rb)]
           guard.should_receive(:run_all)
           guard.run_on_change(%w(spec/models/permission_spec.rb))
         end
@@ -329,7 +285,7 @@ describe Guard::RSpectacle do
     context 'when not passing the run' do
       before do
         guard.last_run_passed = true
-        runner.stub(:run).and_return [false, %w(spec/models/role_spec.rb), [], []]
+        runner.stub(:run).and_return [false, %w(spec/models/role_spec.rb), []]
       end
 
       it 'sets the last run passed to false' do

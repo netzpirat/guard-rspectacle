@@ -40,7 +40,6 @@ module Guard
 
           passed           = status == 0
           failed_examples  = ::Guard::RSpectacle::Notifier.failed_examples || []
-          pending_examples = ::Guard::RSpectacle::Notifier.pending_examples || []
           passed_examples  = ::Guard::RSpectacle::Notifier.passed_examples || []
           duration         = ::Guard::RSpectacle::Notifier.duration || 0.0
           example_count    = ::Guard::RSpectacle::Notifier.example_count || -1
@@ -74,7 +73,7 @@ module Guard
               end
             end
 
-            [passed, relative(failed_examples), relative(passed_examples), relative(pending_examples)]
+            [passed, relative(failed_examples), relative(passed_examples)]
 
           rescue Exception => e
             ::Guard::RSpectacle::Formatter.error("Error running specs: #{ e.message }")

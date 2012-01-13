@@ -16,7 +16,7 @@ module Guard
     autoload :Reloader, 'guard/rspectacle/reloader'
     autoload :Notifier, 'guard/rspectacle/notifier'
 
-    attr_accessor :last_run_passed, :rerun_examples
+    attr_accessor :last_run_passed, :rerun_specs
 
     DEFAULT_OPTIONS = {
         :cli => '',
@@ -24,7 +24,6 @@ module Guard
         :hide_success   => false,
         :all_on_start   => true,
         :keep_failed    => true,
-        :keep_pending   => true,
         :all_after_pass => true,
     }
 
@@ -37,7 +36,6 @@ module Guard
     # @option options [Boolean] :hide_success hide success message notification
     # @option options [Boolean] :all_on_start Run all specs on start
     # @option options [Boolean] :keep_failed keep failed examples and add them to the next run again
-    # @option options [Boolean] :keep_pending keep pending examples and add them to the next run again
     # @option options [Boolean] :all_after_pass run all specs after all examples have passed again after failing
     #
     def initialize(watchers = [], options = {})
@@ -46,7 +44,7 @@ module Guard
       super(watchers, options)
 
       self.last_run_passed = true
-      self.rerun_examples = []
+      self.rerun_specs = []
     end
 
     # Gets called once when Guard starts.
@@ -69,7 +67,7 @@ module Guard
       Dir.glob('**/*.rb').each { |file| Reloader.reload_file(file) }
 
       self.last_run_passed = true
-      self.rerun_examples = []
+      self.rerun_specs = []
     end
 
     # Gets called when all specs should be run.
@@ -77,14 +75,9 @@ module Guard
     # @raise [:task_has_failed] when run_on_change has failed
     #
     def run_all
-      passed, failed_examples, passed_examples, pending_examples = Runner.run(['spec'], options.merge({ :message => 'Run all specs'}))
+      passed, failed_examples, passed_examples = Runner.run(['spec'], options.merge({ :message => 'Run all specs'}))
 
-      if options[:keep_pending]
-        self.rerun_examples = failed_examples + pending_examples
-      else
-        self.rerun_examples = failed_examples
-      end
-
+      self.rerun_specs = failed_examples
       self.last_run_passed = passed
 
       throw :task_has_failed unless passed
@@ -99,22 +92,18 @@ module Guard
       specs = Inspector.clean(paths)
       return false if specs.empty?
 
-      specs += self.rerun_examples if options[:keep_failed]
+      specs += self.rerun_specs if options[:keep_failed]
 
       # RSpec reloads the files, so reload only non spec files
       (paths - specs).each { |path| Reloader.reload_file(path) }
 
-      passed, failed_examples, passed_examples, pending_examples = Runner.run(specs, options)
+      passed, failed_examples, passed_examples = Runner.run(specs, options)
 
-      if options[:keep_pending]
-        self.rerun_examples += failed_examples + pending_examples
-      else
-        self.rerun_examples += failed_examples
-      end
-
-      self.rerun_examples -= passed_examples
+      self.rerun_specs += failed_examples
+      self.rerun_specs -= passed_examples
 
       run_all if passed && !self.last_run_passed && options[:all_after_pass]
+
       self.last_run_passed = passed
 
       throw :task_has_failed unless passed

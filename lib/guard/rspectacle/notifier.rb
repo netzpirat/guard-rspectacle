@@ -14,7 +14,6 @@ module Guard
         attr_accessor :failure_count
         attr_accessor :pending_count
         attr_accessor :failed_examples
-        attr_accessor :pending_examples
         attr_accessor :passed_examples
       end
 
@@ -33,7 +32,6 @@ module Guard
         ::Guard::RSpectacle::Notifier.failure_count    = failure_count
         ::Guard::RSpectacle::Notifier.pending_count    = pending_count
         ::Guard::RSpectacle::Notifier.failed_examples  = @failed_examples.map { |example| example.location }
-        ::Guard::RSpectacle::Notifier.pending_examples = @pending_examples.map { |example| example.location }
         ::Guard::RSpectacle::Notifier.passed_examples  = @passed_examples.map { |example| example.location }
       end
 

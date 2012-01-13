@@ -46,7 +46,6 @@ describe Guard::RSpectacle::Runner do
         ::Guard::RSpectacle::Humanity.stub(:success).and_return('Well done, mate!')
         ::Guard::RSpectacle::Notifier.failed_examples  = []
         ::Guard::RSpectacle::Notifier.passed_examples  = %w(app/model/user_spec.rb app/model/role_spec.rb app/model/permission_spec.rb)
-        ::Guard::RSpectacle::Notifier.pending_examples = []
         ::Guard::RSpectacle::Notifier.duration         = 5.1234567
         ::Guard::RSpectacle::Notifier.example_count    = 3
         ::Guard::RSpectacle::Notifier.failure_count    = 0
@@ -57,8 +56,7 @@ describe Guard::RSpectacle::Runner do
         runner.run(%w(app/model/user_spec.rb), defaults).should =~ [
             true,
             [],
-            %w(app/model/user_spec.rb app/model/role_spec.rb app/model/permission_spec.rb),
-            []
+            %w(app/model/user_spec.rb app/model/role_spec.rb app/model/permission_spec.rb)
         ]
       end
 
@@ -102,7 +100,6 @@ describe Guard::RSpectacle::Runner do
         ::Guard::RSpectacle::Humanity.stub(:pending).and_return('Final spurt!')
         ::Guard::RSpectacle::Notifier.failed_examples  = []
         ::Guard::RSpectacle::Notifier.passed_examples  = %w(app/model/user_spec.rb)
-        ::Guard::RSpectacle::Notifier.pending_examples = %w(app/model/role_spec.rb)
         ::Guard::RSpectacle::Notifier.duration         = 6.9876543
         ::Guard::RSpectacle::Notifier.example_count    = 2
         ::Guard::RSpectacle::Notifier.failure_count    = 0
@@ -113,8 +110,7 @@ describe Guard::RSpectacle::Runner do
         runner.run(%w(app/model/user_spec.rb app/model/role_spec.rb), defaults).should =~ [
             true,
             [],
-            %w(app/model/user_spec.rb),
-            %w(app/model/role_spec.rb)
+            %w(app/model/user_spec.rb)
         ]
       end
 
@@ -147,7 +143,6 @@ describe Guard::RSpectacle::Runner do
         ::Guard::RSpectacle::Humanity.stub(:failure).and_return('Failing, not there yet...')
         ::Guard::RSpectacle::Notifier.failed_examples  = %w(app/model/user_spec.rb)
         ::Guard::RSpectacle::Notifier.passed_examples  = []
-        ::Guard::RSpectacle::Notifier.pending_examples = []
         ::Guard::RSpectacle::Notifier.duration         = 12.1934523
         ::Guard::RSpectacle::Notifier.example_count    = 1
         ::Guard::RSpectacle::Notifier.failure_count    = 1
@@ -158,7 +153,6 @@ describe Guard::RSpectacle::Runner do
         runner.run(%w(app/model/user_spec.rb), defaults).should =~ [
             false,
             %w(app/model/user_spec.rb),
-            [],
             []
         ]
       end
