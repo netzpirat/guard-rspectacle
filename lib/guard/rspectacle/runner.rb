@@ -24,7 +24,7 @@ module Guard
         # @option options [Boolean] :hide_success hide success message notification
         # @param [IO] err the error stream
         # @param [IO] out the output stream
-        # @return [Array] the spec result: status, failed_examples, passed_examples, pending_examples
+        # @return [Array] the spec result: status, failed_specs, passed_specs
         #
         def run(examples, options, err=$stderr, out=$stdout)
           message = options[:message] || "Run #{ examples.join(' ') }"
@@ -38,13 +38,13 @@ module Guard
           begin
             status = ::RSpec::Core::Runner.run(rspec_options, err, out)
 
-            passed          = status == 0
-            failed_examples = ::Guard::RSpectacle::Notifier.failed_examples || []
-            passed_examples = ::Guard::RSpectacle::Notifier.passed_examples || []
-            duration        = ::Guard::RSpectacle::Notifier.duration || 0.0
-            example_count   = ::Guard::RSpectacle::Notifier.example_count || -1
-            failure_count   = ::Guard::RSpectacle::Notifier.failure_count || -1
-            pending_count   = ::Guard::RSpectacle::Notifier.pending_count || -1
+            passed        = status == 0
+            failed_specs  = ::Guard::RSpectacle::Notifier.failed_specs || []
+            passed_specs  = ::Guard::RSpectacle::Notifier.passed_specs || []
+            duration      = ::Guard::RSpectacle::Notifier.duration || 0.0
+            example_count = ::Guard::RSpectacle::Notifier.example_count || -1
+            failure_count = ::Guard::RSpectacle::Notifier.failure_count || -1
+            pending_count = ::Guard::RSpectacle::Notifier.pending_count || -1
 
             if options[:notification]
 
@@ -71,7 +71,7 @@ module Guard
               end
             end
 
-            [passed, relative(failed_examples), relative(passed_examples)]
+            [passed, relative(failed_specs), relative(passed_specs)]
 
           rescue Exception => e
             ::Guard::RSpectacle::Formatter.error("Error running specs: #{ e.message }")

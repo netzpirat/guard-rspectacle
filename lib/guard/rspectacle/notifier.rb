@@ -13,8 +13,8 @@ module Guard
         attr_accessor :example_count
         attr_accessor :failure_count
         attr_accessor :pending_count
-        attr_accessor :failed_examples
-        attr_accessor :passed_examples
+        attr_accessor :failed_specs
+        attr_accessor :passed_specs
       end
 
       def initialize(output)
@@ -27,12 +27,12 @@ module Guard
       end
 
       def dump_summary(duration, example_count, failure_count, pending_count)
-        ::Guard::RSpectacle::Notifier.duration         = duration
-        ::Guard::RSpectacle::Notifier.example_count    = example_count
-        ::Guard::RSpectacle::Notifier.failure_count    = failure_count
-        ::Guard::RSpectacle::Notifier.pending_count    = pending_count
-        ::Guard::RSpectacle::Notifier.failed_examples  = @failed_examples.map { |example| example.location }
-        ::Guard::RSpectacle::Notifier.passed_examples  = @passed_examples.map { |example| example.location }
+        ::Guard::RSpectacle::Notifier.duration      = duration
+        ::Guard::RSpectacle::Notifier.example_count = example_count
+        ::Guard::RSpectacle::Notifier.failure_count = failure_count
+        ::Guard::RSpectacle::Notifier.pending_count = pending_count
+        ::Guard::RSpectacle::Notifier.failed_specs  = @failed_examples.map { |example| example.file_path }.uniq
+        ::Guard::RSpectacle::Notifier.passed_specs  = @passed_examples.map { |example| example.file_path }.uniq
       end
 
     end

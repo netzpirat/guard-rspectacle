@@ -44,12 +44,12 @@ describe Guard::RSpectacle::Runner do
       before do
         ::RSpec::Core::Runner.stub(:run).and_return 0
         ::Guard::RSpectacle::Humanity.stub(:success).and_return('Well done, mate!')
-        ::Guard::RSpectacle::Notifier.failed_examples  = []
-        ::Guard::RSpectacle::Notifier.passed_examples  = %w(app/model/user_spec.rb app/model/role_spec.rb app/model/permission_spec.rb)
-        ::Guard::RSpectacle::Notifier.duration         = 5.1234567
-        ::Guard::RSpectacle::Notifier.example_count    = 3
-        ::Guard::RSpectacle::Notifier.failure_count    = 0
-        ::Guard::RSpectacle::Notifier.pending_count    = 0
+        ::Guard::RSpectacle::Notifier.failed_specs  = []
+        ::Guard::RSpectacle::Notifier.passed_specs  = %w(app/model/user_spec.rb app/model/role_spec.rb app/model/permission_spec.rb)
+        ::Guard::RSpectacle::Notifier.duration      = 5.1234567
+        ::Guard::RSpectacle::Notifier.example_count = 3
+        ::Guard::RSpectacle::Notifier.failure_count = 0
+        ::Guard::RSpectacle::Notifier.pending_count = 0
       end
 
       it 'returns the rspec success status' do
@@ -98,12 +98,12 @@ describe Guard::RSpectacle::Runner do
       before do
         ::RSpec::Core::Runner.stub(:run).and_return 0
         ::Guard::RSpectacle::Humanity.stub(:pending).and_return('Final spurt!')
-        ::Guard::RSpectacle::Notifier.failed_examples  = []
-        ::Guard::RSpectacle::Notifier.passed_examples  = %w(app/model/user_spec.rb)
-        ::Guard::RSpectacle::Notifier.duration         = 6.9876543
-        ::Guard::RSpectacle::Notifier.example_count    = 2
-        ::Guard::RSpectacle::Notifier.failure_count    = 0
-        ::Guard::RSpectacle::Notifier.pending_count    = 1
+        ::Guard::RSpectacle::Notifier.failed_specs  = []
+        ::Guard::RSpectacle::Notifier.passed_specs  = %w(app/model/user_spec.rb)
+        ::Guard::RSpectacle::Notifier.duration      = 6.9876543
+        ::Guard::RSpectacle::Notifier.example_count = 2
+        ::Guard::RSpectacle::Notifier.failure_count = 0
+        ::Guard::RSpectacle::Notifier.pending_count = 1
       end
 
       it 'returns the rspec success status' do
@@ -141,12 +141,12 @@ describe Guard::RSpectacle::Runner do
       before do
         ::RSpec::Core::Runner.stub(:run).and_return -1
         ::Guard::RSpectacle::Humanity.stub(:failure).and_return('Failing, not there yet...')
-        ::Guard::RSpectacle::Notifier.failed_examples  = %w(app/model/user_spec.rb)
-        ::Guard::RSpectacle::Notifier.passed_examples  = []
-        ::Guard::RSpectacle::Notifier.duration         = 12.1934523
-        ::Guard::RSpectacle::Notifier.example_count    = 1
-        ::Guard::RSpectacle::Notifier.failure_count    = 1
-        ::Guard::RSpectacle::Notifier.pending_count    = 0
+        ::Guard::RSpectacle::Notifier.failed_specs  = %w(app/model/user_spec.rb)
+        ::Guard::RSpectacle::Notifier.passed_specs  = []
+        ::Guard::RSpectacle::Notifier.duration      = 12.1934523
+        ::Guard::RSpectacle::Notifier.example_count = 1
+        ::Guard::RSpectacle::Notifier.failure_count = 1
+        ::Guard::RSpectacle::Notifier.pending_count = 0
       end
 
       it 'returns the rspec success status' do
