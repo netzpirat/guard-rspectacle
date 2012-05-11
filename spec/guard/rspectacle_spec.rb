@@ -206,32 +206,32 @@ describe Guard::RSpectacle do
     end
   end
 
-  describe '.run_on_change' do
+  describe '.run_on_changes' do
     it 'passes the paths to the Inspector for cleanup' do
       inspector.should_receive(:clean).with(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
-      guard.run_on_change(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
+      guard.run_on_changes(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
     end
 
     it 'returns false when no valid paths are passed' do
       inspector.should_receive(:clean).and_return []
-      guard.run_on_change(%w(spec/models/role_spec.rb)).should be_false
+      guard.run_on_changes(%w(spec/models/role_spec.rb)).should be_false
     end
 
     it 'reloads changed non-spec files' do
       inspector.should_receive(:clean).and_return %w(spec/models/user_spec.rb)
       reloader.should_receive(:reload_file).with('app/models/user.rb')
-      guard.run_on_change(%w(spec/models/user_spec.rb app/models/user.rb))
+      guard.run_on_changes(%w(spec/models/user_spec.rb app/models/user.rb))
     end
 
     it 'starts the Runner with the cleaned files' do
       inspector.should_receive(:clean).with(%w(spec/models/user_spec.rb spec/models/role_spec.rb)).and_return %w(spec/models/user_spec.rb)
       runner.should_receive(:run).with(%w(spec/models/user_spec.rb), defaults).and_return [true, %w(spec/models/user_spec.rb), []]
-      guard.run_on_change(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
+      guard.run_on_changes(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
     end
 
     it 'adds the failed specs to the specs to be rerun' do
       runner.stub(:run).and_return [true, %w(spec/models/role_spec.rb), %w(spec/models/user_spec.rb)]
-      guard.run_on_change(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
+      guard.run_on_changes(%w(spec/models/user_spec.rb spec/models/role_spec.rb))
       guard.rerun_specs.should =~ %w(spec/models/role_spec.rb)
     end
 
@@ -244,7 +244,7 @@ describe Guard::RSpectacle do
 
       it 'appends the last failed paths to the current run' do
         runner.should_receive(:run).with(%w(spec/models/user_spec.rb spec/models/role_spec.rb), defaults)
-        guard.run_on_change(%w(spec/models/user_spec.rb))
+        guard.run_on_changes(%w(spec/models/user_spec.rb))
       end
     end
 
@@ -257,12 +257,12 @@ describe Guard::RSpectacle do
       end
 
       it 'sets the last run passed to true' do
-        guard.run_on_change(%w(spec/models/permission_spec.rb ))
+        guard.run_on_changes(%w(spec/models/permission_spec.rb ))
         guard.last_run_passed.should be_true
       end
 
       it 'removes the passed specs from the rerun specs' do
-        guard.run_on_change(%w(spec/models/permission_spec.rb))
+        guard.run_on_changes(%w(spec/models/permission_spec.rb))
         guard.rerun_specs.should =~ %w(spec/models/role_spec.rb)
       end
 
@@ -277,7 +277,7 @@ describe Guard::RSpectacle do
         it 'runs all specs' do
           runner.stub(:run).and_return [true, [], %w(spec/models/permission_spec.rb)]
           guard.should_receive(:run_all)
-          guard.run_on_change(%w(spec/models/permission_spec.rb))
+          guard.run_on_changes(%w(spec/models/permission_spec.rb))
         end
       end
     end
@@ -289,12 +289,12 @@ describe Guard::RSpectacle do
       end
 
       it 'sets the last run passed to false' do
-        catch(:task_has_failed) { guard.run_on_change(%w(spec/models/role_spec.rb)) }
+        catch(:task_has_failed) { guard.run_on_changes(%w(spec/models/role_spec.rb)) }
         guard.last_run_passed.should be_false
       end
 
       it 'throws :task_has_failed' do
-        expect { guard.run_on_change(%w(spec/models/role_spec.rb)) }.to throw_symbol :task_has_failed
+        expect { guard.run_on_changes(%w(spec/models/role_spec.rb)) }.to throw_symbol :task_has_failed
       end
     end
 
