@@ -8,10 +8,10 @@ gem 'rake'
 require 'rbconfig'
 
 if RbConfig::CONFIG['target_os'] =~ /darwin/i
-  gem 'rb-fsevent', '>= 0.4.0'
-  gem 'growl',      '~> 1.0.3'
-end
-if RbConfig::CONFIG['target_os'] =~ /linux/i
-  gem 'rb-inotify', '>= 0.8.4'
-  gem 'libnotify',  '~> 0.7.1'
+  gem 'ruby_gntp', :require => false
+elsif RbConfig::CONFIG['target_os'] =~ /linux/i
+  gem 'libnotify', :require => false
+elsif RbConfig::CONFIG['target_os'] =~ /mswin|mingw/i
+  gem 'win32console', :require => false
+  gem 'rb-notifu', :require => false
 end
